@@ -17,6 +17,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     var delegate: PreferencesDelegate?
 
     @IBOutlet weak var pomodoroDuration: NSTextField!
+    @IBOutlet weak var breakDuration: NSTextField!
     
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -32,7 +33,8 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     @IBAction func savePreferences(sender: AnyObject) {
         let defaults = NSUserDefaults.standardUserDefaults()
 
-        defaults.setValue(pomodoroDuration.integerValue, forKey: "pomodoroDuration")
+        defaults.setValue(pomodoroDuration.integerValue * 60, forKey: "pomodoroDuration")
+        defaults.setValue(breakDuration.integerValue * 60, forKey: "breakDuration")
 
         closeAndSave()
     }

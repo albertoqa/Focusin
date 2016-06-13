@@ -19,6 +19,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let popover = NSPopover()
     
     func applicationDidFinishLaunching(notification: NSNotification) {
+        
+        let defaultPomodoroDuration = 25 * 60
+        let defaultBreakDuration = 5 * 60
+        
+        if(NSUserDefaults.standardUserDefaults().stringForKey("pomodoroDuration") == nil) {
+            NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: "pomodoroDuration")
+            NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: "breakDuration")
+        }
+        
         if let button = menu.button {
             button.image = NSImage(named: "timer")
             button.action = #selector(AppDelegate.togglePopover(_:))
