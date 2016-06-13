@@ -10,7 +10,9 @@ import Cocoa
 
 class PomodoroViewController: NSViewController {
 
-    @IBOutlet var mainView: NSView!
+    @IBOutlet var mainView: PopoverRootView!
+    let defaults = NSUserDefaults.standardUserDefaults()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,8 +20,8 @@ class PomodoroViewController: NSViewController {
     }
     
     override func viewWillAppear() {
-        //mainView.layer?.backgroundColor = NSColor.blueColor().CGColor
-        mainView.layer?.setNeedsDisplay()
+        
     }
     
 }
+

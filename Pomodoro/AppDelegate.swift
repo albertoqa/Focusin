@@ -11,15 +11,16 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var window: NSWindow!    // this window will be hidden
     
-    var eventMonitor: EventMonitor?
+    var eventMonitor: EventMonitor? // monitor if the user click outside of the app
+    
     let menu = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
     let popover = NSPopover()
     
     func applicationDidFinishLaunching(notification: NSNotification) {
         if let button = menu.button {
-            button.image = NSImage(named: "tomato")
+            button.image = NSImage(named: "timer")
             button.action = #selector(AppDelegate.togglePopover(_:))
         }
         
