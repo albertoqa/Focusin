@@ -11,11 +11,11 @@ import Cocoa
 class PopoverRootView: NSView {
 
     override func viewDidMoveToWindow() {
-        let aFrameView = self.window?.contentView?.superview
+        /*let aFrameView = self.window?.contentView?.superview
         let a = PopoverBackgroundView(frame: aFrameView!.bounds)
         a.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
         aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.Below, relativeTo: aFrameView)
-        super.viewDidMoveToWindow()
+        super.viewDidMoveToWindow()*/
     }
     
     override func drawRect(dirtyRect: NSRect) {

@@ -8,6 +8,10 @@
         <customObject id="-2" userLabel="File's Owner" customClass="PomodoroViewController" customModule="Pomodoro" customModuleProvider="target">
             <connections>
                 <outlet property="mainView" destination="Hz6-mo-xeY" id="OVY-cw-6ci"/>
+                <outlet property="resetButton" destination="iAB-tR-aAH" id="73x-UH-xVp"/>
+                <outlet property="settingsButton" destination="JmK-rV-AVs" id="xl9-iM-LV9"/>
+                <outlet property="startButton" destination="CQZ-OJ-lvh" id="HuX-9c-wV5"/>
+                <outlet property="timeLabel" destination="LKL-SD-n1L" id="nYH-YA-dvP"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
         </customObject>
@@ -76,6 +80,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="startPauseTimer:" target="-2" id="Onm-qH-3BI"/>
+                    </connections>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iAB-tR-aAH">
                     <rect key="frame" x="216" y="231" width="17" height="17"/>
@@ -83,6 +90,9 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="resetTimer:" target="-2" id="Mkm-Fa-PYX"/>
+                    </connections>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JmK-rV-AVs">
                     <rect key="frame" x="325" y="349" width="18" height="18"/>
@@ -90,10 +100,27 @@
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
+                    <connections>
+                        <action selector="openSettingsMenu:" target="-2" id="gZb-qk-WCG"/>
+                    </connections>
                 </button>
             </subviews>
             <point key="canvasLocation" x="304" y="434.5"/>
         </customView>
+        <menu id="Ruw-gy-v0J">
+            <items>
+                <menuItem title="Item 1" id="DvT-d4-f9n">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 2" id="9Ph-kN-RPg">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Item 3" id="eBE-A2-M5P">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="477.5" y="107.5"/>
+        </menu>
     </objects>
     <resources>
         <image name="cancel" width="100" height="100"/>
