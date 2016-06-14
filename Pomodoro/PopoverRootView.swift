@@ -11,11 +11,12 @@ import Cocoa
 class PopoverRootView: NSView {
 
     override func viewDidMoveToWindow() {
-        /*let aFrameView = self.window?.contentView?.superview
+        self.wantsLayer = true
+        let aFrameView = self.window?.contentView?.superview
         let a = PopoverBackgroundView(frame: aFrameView!.bounds)
         a.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
         aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.Below, relativeTo: aFrameView)
-        super.viewDidMoveToWindow()*/
+        super.viewDidMoveToWindow()
     }
     
     override func drawRect(dirtyRect: NSRect) {
@@ -37,7 +38,9 @@ class PopoverBackgroundView: NSView {
     }
     
     override func drawRect(rect: CGRect) {
-        NSColor.whiteColor().set()
+        NSColor.init(red: 1, green:1, blue:1, alpha:1).set()
+        //NSColor.init(red: 0.416, green: 0.482, blue: 0.553, alpha: 0.98).set()
+        //NSColor.whiteColor().set()
         NSRectFill(self.bounds)
     }
 }

@@ -7,6 +7,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PomodoroViewController" customModule="Pomodoro" customModuleProvider="target">
             <connections>
+                <outlet property="currentTask" destination="krq-MJ-pdL" id="wJA-FT-95E"/>
+                <outlet property="fullPomodoros" destination="Ke1-L5-4hH" id="yXI-bw-7iv"/>
                 <outlet property="mainView" destination="Hz6-mo-xeY" id="OVY-cw-6ci"/>
                 <outlet property="resetButton" destination="iAB-tR-aAH" id="73x-UH-xVp"/>
                 <outlet property="settingsButton" destination="JmK-rV-AVs" id="xl9-iM-LV9"/>
@@ -21,41 +23,41 @@
             <rect key="frame" x="0.0" y="0.0" width="352" height="377"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="krq-MJ-pdL">
+                <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="krq-MJ-pdL">
                     <rect key="frame" x="46" y="92" width="261" height="30"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="3O5-nq-y39">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" focusRingType="none" alignment="center" placeholderString="What are you working on?" drawsBackground="YES" id="3O5-nq-y39">
+                        <font key="font" size="18" name="Avenir-Light"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                     </textFieldCell>
                 </textField>
-                <splitView fixedFrame="YES" arrangesAllSubviews="NO" dividerStyle="paneSplitter" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mr2-Kq-MyA">
+                <splitView fixedFrame="YES" arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mr2-Kq-MyA">
                     <rect key="frame" x="0.0" y="0.0" width="352" height="77"/>
                     <subviews>
                         <customView fixedFrame="YES" id="2pc-iv-0GO">
-                            <rect key="frame" x="0.0" y="0.0" width="172" height="77"/>
+                            <rect key="frame" x="0.0" y="0.0" width="176.5" height="77"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ke1-L5-4hH">
-                                    <rect key="frame" x="31" y="35" width="110" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Full pomodoros..." id="end-zG-Fxb">
+                                    <rect key="frame" x="33" y="35" width="106" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Full pomodoros..." drawsBackground="YES" id="end-zG-Fxb">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                     </textFieldCell>
                                 </textField>
                             </subviews>
                         </customView>
                         <customView fixedFrame="YES" id="2IA-uB-aHA">
-                            <rect key="frame" x="182" y="0.0" width="170" height="77"/>
+                            <rect key="frame" x="177.5" y="0.0" width="174.5" height="77"/>
                             <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mff-Vn-poh">
-                                    <rect key="frame" x="30" y="30" width="73" height="17"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Next task..." id="ZOE-eJ-MI8">
+                                    <rect key="frame" x="32" y="30" width="69" height="17"/>
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Next task..." drawsBackground="YES" id="ZOE-eJ-MI8">
                                         <font key="font" metaFont="system"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
                                     </textFieldCell>
                                 </textField>
                             </subviews>
@@ -66,17 +68,9 @@
                         <real value="250"/>
                     </holdingPriorities>
                 </splitView>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LKL-SD-n1L">
-                    <rect key="frame" x="16" y="262" width="321" height="95"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="25:05" id="kYy-pW-Tdd">
-                        <font key="font" metaFont="system" size="80"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CQZ-OJ-lvh">
-                    <rect key="frame" x="135" y="156" width="82" height="82"/>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="play" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="vCB-cz-B0r">
+                    <rect key="frame" x="148" y="178" width="56" height="56"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="vCB-cz-B0r">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -85,7 +79,7 @@
                     </connections>
                 </button>
                 <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iAB-tR-aAH">
-                    <rect key="frame" x="216" y="231" width="17" height="17"/>
+                    <rect key="frame" x="203" y="233" width="17" height="17"/>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="cancel" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Tcx-ZZ-aWc">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
@@ -104,27 +98,20 @@
                         <action selector="openSettingsMenu:" target="-2" id="gZb-qk-WCG"/>
                     </connections>
                 </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LKL-SD-n1L">
+                    <rect key="frame" x="18" y="246" width="317" height="131"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="25:05" drawsBackground="YES" id="kYy-pW-Tdd">
+                        <font key="font" size="93" name="DejaVuSansMono"/>
+                        <color key="textColor" red="0.93333333333333335" green="0.41568627450980394" blue="0.35294117647058826" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="deviceWhite"/>
+                    </textFieldCell>
+                </textField>
             </subviews>
             <point key="canvasLocation" x="304" y="434.5"/>
         </customView>
-        <menu id="Ruw-gy-v0J">
-            <items>
-                <menuItem title="Item 1" id="DvT-d4-f9n">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 2" id="9Ph-kN-RPg">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-                <menuItem title="Item 3" id="eBE-A2-M5P">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                </menuItem>
-            </items>
-            <point key="canvasLocation" x="477.5" y="107.5"/>
-        </menu>
     </objects>
     <resources>
         <image name="cancel" width="100" height="100"/>
-        <image name="play" width="96" height="96"/>
         <image name="settings" width="100" height="100"/>
     </resources>
 </document>

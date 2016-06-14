@@ -63,11 +63,13 @@ class Timer: NSObject {
     }
     
     /* Unpause the currently running timer or if timeLeft is 0, restart it */
-    func unPause() {
+    func unPause() -> Bool {
         if(timeLeft == 0) {
             startPomodoroTimer()
+            return false
         } else {
             startTimer()
+            return true
         }
     }
     

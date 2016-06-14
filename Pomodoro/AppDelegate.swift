@@ -22,14 +22,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         let defaultPomodoroDuration = 25 * 60
         let defaultBreakDuration = 5 * 60
-        
+        let defaultTargetPomodoros = 10
+
         if(NSUserDefaults.standardUserDefaults().stringForKey("pomodoroDuration") == nil) {
             NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: "pomodoroDuration")
             NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: "breakDuration")
+            NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: "targetPomodoros")
         }
         
         if let button = menu.button {
-            button.image = NSImage(named: "timer")
+            let icon = NSImage(named: "timer")
+            icon?.template = true
+            button.image = icon
             button.action = #selector(AppDelegate.togglePopover(_:))
         }
         
