@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D338D4351D107E9D00BB86C1 /* NotificationsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D338D4341D107E9D00BB86C1 /* NotificationsHandler.swift */; };
 		D338D4371D10842900BB86C1 /* CircleAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D338D4361D10842900BB86C1 /* CircleAnimation.swift */; };
+		D338D4391D108FEE00BB86C1 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = D338D4381D108FEE00BB86C1 /* Defaults.swift */; };
 		D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */; };
 		D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC01D1033C00069BC94 /* Assets.xcassets */; };
 		D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC21D1033C00069BC94 /* MainMenu.xib */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		D338D4341D107E9D00BB86C1 /* NotificationsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsHandler.swift; sourceTree = "<group>"; };
 		D338D4361D10842900BB86C1 /* CircleAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleAnimation.swift; sourceTree = "<group>"; };
+		D338D4381D108FEE00BB86C1 /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3ECECC01D1033C00069BC94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				D3ECECC51D1033C00069BC94 /* Info.plist */,
 				D338D4341D107E9D00BB86C1 /* NotificationsHandler.swift */,
 				D338D4361D10842900BB86C1 /* CircleAnimation.swift */,
+				D338D4381D108FEE00BB86C1 /* Defaults.swift */,
 			);
 			path = Focusin;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 				D3ECECE21D1034F70069BC94 /* PopoverRootView.swift in Sources */,
 				D3ECECE01D1034F70069BC94 /* PomodoroViewController.swift in Sources */,
 				D338D4351D107E9D00BB86C1 /* NotificationsHandler.swift in Sources */,
+				D338D4391D108FEE00BB86C1 /* Defaults.swift in Sources */,
 				D3ECECD21D1034860069BC94 /* AboutWindowController.swift in Sources */,
 				D3ECECDF1D1034F70069BC94 /* EventMonitor.swift in Sources */,
 			);

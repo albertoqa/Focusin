@@ -8,6 +8,7 @@
 
 import Cocoa
 
+/* The delegate must implement the methods to take action for the new preferences */
 protocol PreferencesDelegate {
     func preferencesDidUpdate()
 }
@@ -34,11 +35,11 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         NSApp.activateIgnoringOtherApps(true)
         
         /* Load preferred settings */
-        pomodoroDuration.integerValue = defaults.integerForKey("pomodoroDuration")/seconds
-        breakDuration.integerValue = defaults.integerForKey("breakDuration")/seconds
-        targetPomodoros.integerValue = defaults.integerForKey("targetPomodoros")
-        showNotifications.state = defaults.integerForKey("showNotifications")
-        showTimeInBar.integerValue = defaults.integerForKey("showTimeInBar")
+        pomodoroDuration.integerValue = defaults.integerForKey(Defaults.pomodoroKey)/seconds
+        breakDuration.integerValue = defaults.integerForKey(Defaults.breakKey)/seconds
+        targetPomodoros.integerValue = defaults.integerForKey(Defaults.targetKey)
+        showNotifications.state = defaults.integerForKey(Defaults.showNotificationsKey)
+        showTimeInBar.integerValue = defaults.integerForKey(Defaults.showTimeKey)
     }
     
     override var windowNibName : String! {
@@ -49,11 +50,11 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     @IBAction func savePreferences(sender: AnyObject) {
         closedWithButton = true
         
-        defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: "pomodoroDuration")
-        defaults.setValue(breakDuration.integerValue * seconds, forKey: "breakDuration")
-        defaults.setValue(targetPomodoros.integerValue, forKey: "targetPomodoros")
-        defaults.setValue(showNotifications.state, forKey: "showNotifications")
-        defaults.setValue(showTimeInBar.state, forKey: "showTimeInBar")
+        defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: Defaults.pomodoroKey)
+        defaults.setValue(breakDuration.integerValue * seconds, forKey: Defaults.breakKey)
+        defaults.setValue(targetPomodoros.integerValue, forKey: Defaults.targetKey)
+        defaults.setValue(showNotifications.state, forKey: Defaults.showNotificationsKey)
+        defaults.setValue(showTimeInBar.state, forKey: Defaults.showTimeKey)
 
         closeAndSave()
         self.window?.close()

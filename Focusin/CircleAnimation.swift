@@ -8,55 +8,67 @@
 
 import Cocoa
 
+/* In this app there are two circles: one for the time and one for the target pomodoros to complete */
 enum Circles {
     case TIME, TARGET
 }
 
+/* Add two layers and animations to the pomodoro view */
 public class CircleAnimation {
     
     let defaults = NSUserDefaults.standardUserDefaults()
 
+    // Time circle (big)
     let timeLeftShapeLayer = CAShapeLayer()
     let bgTimeLeftShapeLayer = CAShapeLayer()
     var strokeTimeIt = CABasicAnimation(keyPath: "strokeEnd")
-    
+    let radiusBig: CGFloat = 65
+    let widthBig: CGFloat = 5
+
+    // Target circle (small)
     let targetShapeLayer = CAShapeLayer()
     let bgTargetShapeLayer = CAShapeLayer()
     let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
+    let radiusSmall: CGFloat = 25
+    let widthSmall: CGFloat = 2
     
-    let mainView: PopoverRootView
+    let mainView: PopoverRootView   // pomodoro view
+
+    let strokeStartValue: Double = 0.0
+    let strokeToValue: Double = 1.0
     
+    // startButton is the position of the Time Circle, fullPomodoros is the position of the Target circle
     init(popoverRootView: PopoverRootView, startButton: NSButton, fullPomodoros: NSTextField) {
         self.mainView = popoverRootView
         
         // Animation circle for the current timer
         drawBgShape(bgTimeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
-                    radius: 65, lineWidth: 5)
+                    radius: radiusBig, lineWidth: widthBig)
         drawShape(timeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
-                  radius: 65, lineWidth: 5)
+                  radius: radiusBig, lineWidth: widthBig)
         
-        strokeTimeIt.fromValue = 0.0
-        strokeTimeIt.toValue = 1.0
-        strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
+        strokeTimeIt.fromValue = strokeStartValue
+        strokeTimeIt.toValue = strokeToValue
+        strokeTimeIt.duration = defaults.doubleForKey(Defaults.pomodoroKey)+1
         strokeTargetIt.removedOnCompletion = true
         pauseLayer(Circles.TIME)
         timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
         
         // Animation circle for the target pomodoros
         drawBgShape(bgTargetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
-                    radius: 25, lineWidth: 2)
+                    radius: radiusSmall, lineWidth: widthSmall)
         drawShape(targetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
-                  radius: 25, lineWidth: 2)
+                  radius: radiusSmall, lineWidth: widthSmall)
         
-        strokeTargetIt.fromValue = 0.0
-        strokeTargetIt.toValue = 1.0
-        strokeTargetIt.duration = defaults.doubleForKey("targetPomodoros")*defaults.doubleForKey("pomodoroDuration")
+        strokeTargetIt.fromValue = strokeStartValue
+        strokeTargetIt.toValue = strokeToValue
+        strokeTargetIt.duration = defaults.doubleForKey(Defaults.targetKey)*defaults.doubleForKey(Defaults.pomodoroKey)
         strokeTargetIt.removedOnCompletion = false
         pauseLayer(Circles.TARGET)
         targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
-
     }
     
+    /* Draw a cricle on the given layer */
     func drawBgShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
         bez.appendBezierPathWithArcWithCenter(center, radius:
@@ -69,6 +81,7 @@ public class CircleAnimation {
         mainView.layer!.addSublayer(layer)
     }
     
+    /* Draw a circle over the previous circle to make the apparence of fill it */
     func drawShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
         bez.appendBezierPathWithArcWithCenter(center, radius:
@@ -80,6 +93,7 @@ public class CircleAnimation {
         mainView.layer!.addSublayer(layer)
     }
     
+    /* Pause the animation for the given circle */
     func pauseLayer(circle: Circles) {
         let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
         let pausedTime : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
@@ -87,6 +101,7 @@ public class CircleAnimation {
         layer.timeOffset = pausedTime
     }
     
+    /* Resume the animation for the given circle */
     func resumeLayer(circle: Circles) {
         let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
         let pausedTime = layer.timeOffset
@@ -97,6 +112,7 @@ public class CircleAnimation {
         layer.beginTime = timeSincePause
     }
     
+    /* Reset the animation for the given circle */
     func resetLayer(circle: Circles) {
         let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
         layer.speed = 0.0;
@@ -104,6 +120,7 @@ public class CircleAnimation {
         layer.beginTime = 0.0;
     }
     
+    /* Restart (reset and start) the animation for the given circle */
     func restartLayer(circle: Circles) {
         resetLayer(circle)
         resumeLayer(circle)
@@ -126,10 +143,10 @@ public class CircleAnimation {
         }
         
         if(isPomodoro) {
-            strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
+            strokeTimeIt.duration = defaults.doubleForKey(Defaults.pomodoroKey)+1
             timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
         } else {
-            strokeTimeIt.duration = defaults.doubleForKey("breakDuration")+1
+            strokeTimeIt.duration = defaults.doubleForKey(Defaults.breakKey)+1
             timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
         }
     }

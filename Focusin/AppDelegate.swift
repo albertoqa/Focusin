@@ -18,36 +18,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let menu = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
     let popover = NSPopover()
     
+    let barIcon = "timer-2"
+    let timeFormat = "%d:%02d"
+    
     func applicationDidFinishLaunching(notification: NSNotification) {
         
         let defaultPomodoroDuration = 25 * 60
         let defaultBreakDuration = 5 * 60
         let defaultTargetPomodoros = 10
         
-        //let defaultPomodoroDuration = 5
-        //let defaultBreakDuration = 2
-        //let defaultTargetPomodoros = 3
-        NSUserDefaults.standardUserDefaults().setInteger(5, forKey: "pomodoroDuration")
+        //NSUserDefaults.standardUserDefaults().setInteger(6, forKey: Defaults.pomodoroKey)
         
-        if(NSUserDefaults.standardUserDefaults().stringForKey("pomodoroDuration") == nil) {
-            NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: "pomodoroDuration")
-            NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: "breakDuration")
-            NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: "targetPomodoros")
-            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "showTimeInBar")
-            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "showNotifications")
+        /* On first time launch set the default values */
+        if(NSUserDefaults.standardUserDefaults().stringForKey(Defaults.pomodoroKey) == nil) {
+            NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: Defaults.pomodoroKey)
+            NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: Defaults.breakKey)
+            NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: Defaults.targetKey)
+            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showTimeKey)
+            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showNotificationsKey)
         }
         
-        
+        // Set the icon for the menu bar
         let button = menu.button
-        let icon = NSImage(named: "timer-2")
-        icon?.template = true
+        let icon = NSImage(named: barIcon)
+        icon?.template = true   // normal and dark mode
         button!.image = icon
         button!.imagePosition = NSCellImagePosition.ImageLeft
         button!.action = #selector(AppDelegate.togglePopover(_:))
         
-        if(NSUserDefaults.standardUserDefaults().integerForKey("showTimeInBar") == NSOnState) {
-            let pomodoroDefaultDuration = NSUserDefaults.standardUserDefaults().integerForKey("pomodoroDuration")
-            button!.title = String(format: "%d:%02d", pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
+        // Show time in menu bar only if user wants it
+        if(NSUserDefaults.standardUserDefaults().integerForKey(Defaults.showTimeKey) == NSOnState) {
+            let pomodoroDefaultDuration = NSUserDefaults.standardUserDefaults().integerForKey(Defaults.pomodoroKey)
+            button!.title = String(format: timeFormat, pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
         }
 
         popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil, button: button!)
@@ -60,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         eventMonitor?.start()
     }
     
+    /* Show popover when click on menu bar button */
     func showPopover(sender: AnyObject?) {
         NSApp.activateIgnoringOtherApps(true)
         
@@ -70,11 +73,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         eventMonitor?.start()
     }
     
+    /* Close popover when click outside of the view */
     func closePopover(sender: AnyObject?) {
         popover.performClose(sender)
         eventMonitor?.stop()
     }
     
+    /* Toggle the popover visibility */
     func togglePopover(sender: AnyObject?) {
         if popover.shown {
             closePopover(sender)
