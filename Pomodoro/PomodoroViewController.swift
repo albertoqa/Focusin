@@ -11,6 +11,7 @@ import Cocoa
 class PomodoroViewController: NSViewController, PreferencesDelegate {
 
     @IBOutlet var mainView: PopoverRootView!
+    var buttonBar: NSStatusBarButton
     
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var resetButton: NSButton!
@@ -24,6 +25,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     var timer: Timer!
     var isActive: Bool = false
     var isPomodoro: Bool = true
+    var reloadPreferencesOnNextPomodoro = false
+    var showTimeInBar: Bool = true
 
     var preferencesWindow: PreferencesWindowController!
     var aboutWindow: AboutWindowController!
@@ -38,6 +41,15 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     let bgTargetShapeLayer = CAShapeLayer()
     let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
     
+    init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton) {
+        self.buttonBar = button
+        super.init(nibName: nibName, bundle: bundle)!
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,6 +58,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         preferencesWindow.delegate = self
         
         timer = Timer(defaults.integerForKey("pomodoroDuration"), defaults.integerForKey("breakDuration"))
+        showTimeInBar = defaults.integerForKey("showTimeInBar") == NSOnState
         reset()
 
         // Animation circle for the current timer
@@ -78,7 +91,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         resetButton.hidden = true
         removeTaskButton.hidden = true
         fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
-        
+
         currentTask.placeholderAttributedString = NSAttributedString(string: "What are you working on?", attributes: [NSForegroundColorAttributeName: NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1),
             NSFontAttributeName : NSFont(name: "Lato-Light", size: 18)!])
     }
@@ -88,6 +101,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func reset() {
         let pomodoroDefaultDuration = defaults.integerForKey("pomodoroDuration")
         timeLabel.stringValue = String(format: "%d:%02d", pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
+        if(showTimeInBar) {
+            buttonBar.title = timeLabel.stringValue
+        }
         resetButton.hidden = true
         startButton.image = NSImage(named: "play-2")
         currentTask.editable = true
@@ -166,7 +182,14 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func updateCurrentStatus() {
         if(timer.timeLeft >= 0 && timer.timer.valid) {
             timeLabel.stringValue = String(format: "%d:%02d", timer.timeLeft/60, timer.timeLeft%60)
+            if(showTimeInBar) {
+                buttonBar.title = timeLabel.stringValue
+            }
         } else {
+            if(reloadPreferencesOnNextPomodoro) {
+                reloadPreferences()
+            }
+            
             pauseLayer(targetShapeLayer)
 
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
@@ -248,8 +271,19 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     
     /* Called when the default preferences are updated */
     func preferencesDidUpdate() {
+        if(!isActive) {
+            reloadPreferences()
+        } else {
+            reloadPreferencesOnNextPomodoro = true
+        }
+    }
+    
+    /* Reload the preferred user preferences and override the current settings */
+    func reloadPreferences() {
+        reloadPreferencesOnNextPomodoro = false
         timer.pomodoroDuration = defaults.integerForKey("pomodoroDuration")
         timer.breakDuration = defaults.integerForKey("breakDuration")
+        
     }
     
     /* Show an alert to the user */

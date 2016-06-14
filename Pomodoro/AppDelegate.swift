@@ -32,16 +32,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: "pomodoroDuration")
             NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: "breakDuration")
             NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: "targetPomodoros")
+            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "showTimeInBar")
+            NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: "showNotifications")
         }
         
-        if let button = menu.button {
-            let icon = NSImage(named: "timer")
-            icon?.template = true
-            button.image = icon
-            button.action = #selector(AppDelegate.togglePopover(_:))
-        }
         
-        popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil)
+        let button = menu.button
+        let icon = NSImage(named: "timer-2")
+        icon?.template = true
+        button!.image = icon
+        button!.imagePosition = NSCellImagePosition.ImageLeft
+        button!.action = #selector(AppDelegate.togglePopover(_:))
+        
+        if(NSUserDefaults.standardUserDefaults().integerForKey("showTimeInBar") == NSOnState) {
+            let pomodoroDefaultDuration = NSUserDefaults.standardUserDefaults().integerForKey("pomodoroDuration")
+            button!.title = String(format: "%d:%02d", pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
+        }
+
+        popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil, button: button!)
         
         eventMonitor = EventMonitor(mask: .LeftMouseDownMask) { [unowned self] event in
             if self.popover.shown {
@@ -77,7 +85,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
     }
-    
 
 }
 

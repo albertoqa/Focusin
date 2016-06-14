@@ -8,6 +8,7 @@
 
 import Cocoa
 
+/* Override view of the popover to allow change background color */
 class PopoverRootView: NSView {
 
     override func viewDidMoveToWindow() {
@@ -21,12 +22,11 @@ class PopoverRootView: NSView {
     
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
-        // Drawing code here.
     }
     
 }
 
-
+/* Allow to change the background color of the popover view */
 class PopoverBackgroundView: NSView {
     
     override init(frame: CGRect) {
@@ -39,9 +39,6 @@ class PopoverBackgroundView: NSView {
     
     override func drawRect(rect: CGRect) {
         NSColor.init(red: 1, green:1, blue:1, alpha:1).set()
-        //NSColor.init(red: 0.902, green:0.922, blue:0.878, alpha:1).set()
-        //NSColor.init(red: 0.416, green: 0.482, blue: 0.553, alpha: 0.98).set()
-        //NSColor.whiteColor().set()
         NSRectFill(self.bounds)
     }
 }

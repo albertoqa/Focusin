@@ -8,6 +8,7 @@
 
 import Cocoa
 
+/* Close the popover window when press outside of it */
 public class EventMonitor {
     private var monitor: AnyObject?
     private let mask: NSEventMask

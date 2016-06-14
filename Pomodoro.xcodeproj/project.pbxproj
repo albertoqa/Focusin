@@ -68,15 +68,15 @@
 		D3ECECBD1D1033BF0069BC94 /* Pomodoro */ = {
 			isa = PBXGroup;
 			children = (
-				D3ECECDA1D1034F70069BC94 /* EventMonitor.swift */,
+				D3ECECC01D1033C00069BC94 /* Assets.xcassets */,
+				D3ECECCB1D1034430069BC94 /* About */,
+				D3ECECD41D1034940069BC94 /* Preferences */,
 				D3ECECDB1D1034F70069BC94 /* PomodoroViewController.swift */,
 				D3ECECDC1D1034F70069BC94 /* PomodoroViewController.xib */,
 				D3ECECDD1D1034F70069BC94 /* PopoverRootView.swift */,
+				D3ECECDA1D1034F70069BC94 /* EventMonitor.swift */,
 				D3ECECDE1D1034F70069BC94 /* Timer.swift */,
-				D3ECECD41D1034940069BC94 /* Preferences */,
-				D3ECECCB1D1034430069BC94 /* About */,
 				D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */,
-				D3ECECC01D1033C00069BC94 /* Assets.xcassets */,
 				D3ECECC21D1033C00069BC94 /* MainMenu.xib */,
 				D3ECECC51D1033C00069BC94 /* Info.plist */,
 			);
@@ -323,6 +323,7 @@
 				D3ECECCA1D1033C00069BC94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

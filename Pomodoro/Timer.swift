@@ -24,7 +24,6 @@ class Timer: NSObject {
     /* Init a new timer with a given pomodoro and break duration */
     init(_ pomodoroDuration: Int, _ breakDuration: Int) {
         super.init()
-
         self.pomodoroDuration = pomodoroDuration
         self.breakDuration = breakDuration
         self.timeLeft = pomodoroDuration
