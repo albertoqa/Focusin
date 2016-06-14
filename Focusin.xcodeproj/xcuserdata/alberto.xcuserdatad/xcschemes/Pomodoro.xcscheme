@@ -17,7 +17,7 @@
                BlueprintIdentifier = "D3ECECBA1D1033BF0069BC94"
                BuildableName = "Pomodoro.app"
                BlueprintName = "Pomodoro"
-               ReferencedContainer = "container:Pomodoro.xcodeproj">
+               ReferencedContainer = "container:Focusin.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "D3ECECBA1D1033BF0069BC94"
             BuildableName = "Pomodoro.app"
             BlueprintName = "Pomodoro"
-            ReferencedContainer = "container:Pomodoro.xcodeproj">
+            ReferencedContainer = "container:Focusin.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "D3ECECBA1D1033BF0069BC94"
             BuildableName = "Pomodoro.app"
             BlueprintName = "Pomodoro"
-            ReferencedContainer = "container:Pomodoro.xcodeproj">
+            ReferencedContainer = "container:Focusin.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "D3ECECBA1D1033BF0069BC94"
             BuildableName = "Pomodoro.app"
             BlueprintName = "Pomodoro"
-            ReferencedContainer = "container:Pomodoro.xcodeproj">
+            ReferencedContainer = "container:Focusin.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -136,7 +136,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Pomodoro" */;
+			buildConfigurationList = D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Focusin" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -307,7 +307,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Pomodoro" */ = {
+		D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Focusin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3ECECC61D1033C00069BC94 /* Debug */,
