@@ -18,7 +18,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     @IBOutlet weak var timeLabel: NSTextField!
     @IBOutlet weak var fullPomodoros: NSTextField!
     @IBOutlet weak var currentTask: NSTextField!
-
+    @IBOutlet weak var removeTaskButton: NSButton!
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     var timer: Timer!
     var isActive: Bool = false
@@ -55,6 +56,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         
         reset()
         resetButton.hidden = true
+        removeTaskButton.hidden = true
+        
+        currentTask.placeholderAttributedString = NSAttributedString(string: "What are you working on?", attributes: [NSForegroundColorAttributeName: NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1),
+            NSFontAttributeName : NSFont(name: "Lato-Light", size: 18)!])
     }
     
     /* Set the timer label to the user preferred pomodoro duration, stop the current timer, hide reset button, 
@@ -64,7 +69,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         timeLabel.stringValue = String(format: "%d:%02d", pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
         fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
         resetButton.hidden = true
-        startButton.image = NSImage(named: "play")
+        startButton.image = NSImage(named: "play-2")
+        currentTask.editable = true
         resetLayer(timeLeftShapeLayer)
     }
     
@@ -76,9 +82,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
             timer.pauseTimer()
             pauseLayer(timeLeftShapeLayer)
             updateStatusTimer.invalidate()
-            startButton.image = NSImage(named: "play")
+            startButton.image = NSImage(named: "play-2")
         } else {
-            startButton.image = NSImage(named: "pause")
+            startButton.image = NSImage(named: "pause-2")
             isActive = true
             if(timer.unPause()) {
                 resumeLayer(timeLeftShapeLayer)
@@ -201,6 +207,26 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         return false
     }
     
+    /* Save the current text and lose focus on the NSTextFiel */
+    @IBAction func enterTask(sender: NSTextField) {
+        sender.resignFirstResponder()
+        sender.selectable = false
+        if(!sender.stringValue.isEmpty) {
+            removeTaskButton.hidden = false
+        } else {
+            currentTask.editable = true
+        }
+    }
+    
+    /* Focus on the NSTextFiel and clear the text */
+    @IBAction func removeTask(sender: NSButton) {
+        currentTask.stringValue = ""
+        currentTask.editable = true
+        currentTask.becomeFirstResponder()
+        sender.hidden = true
+    }
+    
+    
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                                  //
     //    This part of the code was taken from stackoverflow (some modifications where required...)     //
@@ -211,9 +237,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func drawBgShape() {
         let bez = NSBezierPath()
         bez.appendBezierPathWithArcWithCenter(CGPoint(x: startButton.frame.midX , y: startButton.frame.midY), radius:
-            50, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
+            65, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         bgShapeLayer.path = bez.CGPath(forceClose: false)
-        bgShapeLayer.strokeColor = NSColor.blueColor().CGColor
+        bgShapeLayer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
+        //bgShapeLayer.strokeColor = NSColor.blueColor().CGColor
         bgShapeLayer.fillColor = NSColor.clearColor().CGColor
         bgShapeLayer.lineWidth = 5
         mainView.wantsLayer = true
@@ -223,9 +250,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func drawTimeLeftShape() {
         let bez = NSBezierPath()
         bez.appendBezierPathWithArcWithCenter(CGPoint(x: startButton.frame.midX, y: startButton.frame.midY), radius:
-            50, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
+            65, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         timeLeftShapeLayer.path = bez.CGPath(forceClose: false)
-        timeLeftShapeLayer.strokeColor = NSColor.redColor().CGColor
+        //timeLeftShapeLayer.strokeColor = NSColor.redColor().CGColor
+        timeLeftShapeLayer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
         timeLeftShapeLayer.fillColor = NSColor.clearColor().CGColor
         timeLeftShapeLayer.lineWidth = 5
         mainView.layer!.addSublayer(timeLeftShapeLayer)

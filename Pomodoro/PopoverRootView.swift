@@ -39,6 +39,7 @@ class PopoverBackgroundView: NSView {
     
     override func drawRect(rect: CGRect) {
         NSColor.init(red: 1, green:1, blue:1, alpha:1).set()
+        //NSColor.init(red: 0.902, green:0.922, blue:0.878, alpha:1).set()
         //NSColor.init(red: 0.416, green: 0.482, blue: 0.553, alpha: 0.98).set()
         //NSColor.whiteColor().set()
         NSRectFill(self.bounds)
