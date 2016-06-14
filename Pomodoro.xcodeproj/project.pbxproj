@@ -7,21 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D3D6FEA21D0EB4E100DCA35A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D6FEA11D0EB4E100DCA35A /* AppDelegate.swift */; };
-		D3D6FEA41D0EB4E100DCA35A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3D6FEA31D0EB4E100DCA35A /* Assets.xcassets */; };
-		D3D6FEA71D0EB4E200DCA35A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3D6FEA51D0EB4E200DCA35A /* MainMenu.xib */; };
+		D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */; };
+		D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC01D1033C00069BC94 /* Assets.xcassets */; };
+		D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC21D1033C00069BC94 /* MainMenu.xib */; };
+		D3ECECD21D1034860069BC94 /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECD01D1034860069BC94 /* AboutWindowController.swift */; };
+		D3ECECD31D1034860069BC94 /* AboutWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECD11D1034860069BC94 /* AboutWindowController.xib */; };
+		D3ECECD71D1034AC0069BC94 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECD51D1034AC0069BC94 /* PreferencesWindowController.swift */; };
+		D3ECECD81D1034AC0069BC94 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECD61D1034AC0069BC94 /* PreferencesWindowController.xib */; };
+		D3ECECDF1D1034F70069BC94 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECDA1D1034F70069BC94 /* EventMonitor.swift */; };
+		D3ECECE01D1034F70069BC94 /* PomodoroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECDB1D1034F70069BC94 /* PomodoroViewController.swift */; };
+		D3ECECE11D1034F70069BC94 /* PomodoroViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECDC1D1034F70069BC94 /* PomodoroViewController.xib */; };
+		D3ECECE21D1034F70069BC94 /* PopoverRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECDD1D1034F70069BC94 /* PopoverRootView.swift */; };
+		D3ECECE31D1034F70069BC94 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECDE1D1034F70069BC94 /* Timer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D3D6FE9E1D0EB4E100DCA35A /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D3D6FEA11D0EB4E100DCA35A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D3D6FEA31D0EB4E100DCA35A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D3D6FEA61D0EB4E200DCA35A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		D3D6FEA81D0EB4E200DCA35A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		D3ECECC01D1033C00069BC94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D3ECECC31D1033C00069BC94 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		D3ECECC51D1033C00069BC94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3ECECD01D1034860069BC94 /* AboutWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AboutWindowController.swift; path = About/AboutWindowController.swift; sourceTree = "<group>"; };
+		D3ECECD11D1034860069BC94 /* AboutWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AboutWindowController.xib; path = About/AboutWindowController.xib; sourceTree = "<group>"; };
+		D3ECECD51D1034AC0069BC94 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PreferencesWindowController.swift; path = Preferences/PreferencesWindowController.swift; sourceTree = "<group>"; };
+		D3ECECD61D1034AC0069BC94 /* PreferencesWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PreferencesWindowController.xib; path = Preferences/PreferencesWindowController.xib; sourceTree = "<group>"; };
+		D3ECECDA1D1034F70069BC94 /* EventMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
+		D3ECECDB1D1034F70069BC94 /* PomodoroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PomodoroViewController.swift; sourceTree = "<group>"; };
+		D3ECECDC1D1034F70069BC94 /* PomodoroViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PomodoroViewController.xib; sourceTree = "<group>"; };
+		D3ECECDD1D1034F70069BC94 /* PopoverRootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopoverRootView.swift; sourceTree = "<group>"; };
+		D3ECECDE1D1034F70069BC94 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D3D6FE9B1D0EB4E100DCA35A /* Frameworks */ = {
+		D3ECECB81D1033BF0069BC94 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -31,43 +49,68 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D3D6FE951D0EB4E100DCA35A = {
+		D3ECECB21D1033BF0069BC94 = {
 			isa = PBXGroup;
 			children = (
-				D3D6FEA01D0EB4E100DCA35A /* Pomodoro */,
-				D3D6FE9F1D0EB4E100DCA35A /* Products */,
+				D3ECECBD1D1033BF0069BC94 /* Pomodoro */,
+				D3ECECBC1D1033BF0069BC94 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		D3D6FE9F1D0EB4E100DCA35A /* Products */ = {
+		D3ECECBC1D1033BF0069BC94 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3D6FE9E1D0EB4E100DCA35A /* Pomodoro.app */,
+				D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D3D6FEA01D0EB4E100DCA35A /* Pomodoro */ = {
+		D3ECECBD1D1033BF0069BC94 /* Pomodoro */ = {
 			isa = PBXGroup;
 			children = (
-				D3D6FEA11D0EB4E100DCA35A /* AppDelegate.swift */,
-				D3D6FEA31D0EB4E100DCA35A /* Assets.xcassets */,
-				D3D6FEA51D0EB4E200DCA35A /* MainMenu.xib */,
-				D3D6FEA81D0EB4E200DCA35A /* Info.plist */,
+				D3ECECDA1D1034F70069BC94 /* EventMonitor.swift */,
+				D3ECECDB1D1034F70069BC94 /* PomodoroViewController.swift */,
+				D3ECECDC1D1034F70069BC94 /* PomodoroViewController.xib */,
+				D3ECECDD1D1034F70069BC94 /* PopoverRootView.swift */,
+				D3ECECDE1D1034F70069BC94 /* Timer.swift */,
+				D3ECECD41D1034940069BC94 /* Preferences */,
+				D3ECECCB1D1034430069BC94 /* About */,
+				D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */,
+				D3ECECC01D1033C00069BC94 /* Assets.xcassets */,
+				D3ECECC21D1033C00069BC94 /* MainMenu.xib */,
+				D3ECECC51D1033C00069BC94 /* Info.plist */,
 			);
 			path = Pomodoro;
+			sourceTree = "<group>";
+		};
+		D3ECECCB1D1034430069BC94 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				D3ECECD01D1034860069BC94 /* AboutWindowController.swift */,
+				D3ECECD11D1034860069BC94 /* AboutWindowController.xib */,
+			);
+			name = About;
+			sourceTree = "<group>";
+		};
+		D3ECECD41D1034940069BC94 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				D3ECECD51D1034AC0069BC94 /* PreferencesWindowController.swift */,
+				D3ECECD61D1034AC0069BC94 /* PreferencesWindowController.xib */,
+			);
+			name = Preferences;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D3D6FE9D1D0EB4E100DCA35A /* Pomodoro */ = {
+		D3ECECBA1D1033BF0069BC94 /* Pomodoro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D3D6FEAB1D0EB4E200DCA35A /* Build configuration list for PBXNativeTarget "Pomodoro" */;
+			buildConfigurationList = D3ECECC81D1033C00069BC94 /* Build configuration list for PBXNativeTarget "Pomodoro" */;
 			buildPhases = (
-				D3D6FE9A1D0EB4E100DCA35A /* Sources */,
-				D3D6FE9B1D0EB4E100DCA35A /* Frameworks */,
-				D3D6FE9C1D0EB4E100DCA35A /* Resources */,
+				D3ECECB71D1033BF0069BC94 /* Sources */,
+				D3ECECB81D1033BF0069BC94 /* Frameworks */,
+				D3ECECB91D1033BF0069BC94 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -75,25 +118,25 @@
 			);
 			name = Pomodoro;
 			productName = Pomodoro;
-			productReference = D3D6FE9E1D0EB4E100DCA35A /* Pomodoro.app */;
+			productReference = D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		D3D6FE961D0EB4E100DCA35A /* Project object */ = {
+		D3ECECB31D1033BF0069BC94 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Alberto Quesada Aranda";
 				TargetAttributes = {
-					D3D6FE9D1D0EB4E100DCA35A = {
+					D3ECECBA1D1033BF0069BC94 = {
 						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
 			};
-			buildConfigurationList = D3D6FE991D0EB4E100DCA35A /* Build configuration list for PBXProject "Pomodoro" */;
+			buildConfigurationList = D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Pomodoro" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -101,44 +144,53 @@
 				en,
 				Base,
 			);
-			mainGroup = D3D6FE951D0EB4E100DCA35A;
-			productRefGroup = D3D6FE9F1D0EB4E100DCA35A /* Products */;
+			mainGroup = D3ECECB21D1033BF0069BC94;
+			productRefGroup = D3ECECBC1D1033BF0069BC94 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D3D6FE9D1D0EB4E100DCA35A /* Pomodoro */,
+				D3ECECBA1D1033BF0069BC94 /* Pomodoro */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D3D6FE9C1D0EB4E100DCA35A /* Resources */ = {
+		D3ECECB91D1033BF0069BC94 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3D6FEA41D0EB4E100DCA35A /* Assets.xcassets in Resources */,
-				D3D6FEA71D0EB4E200DCA35A /* MainMenu.xib in Resources */,
+				D3ECECD31D1034860069BC94 /* AboutWindowController.xib in Resources */,
+				D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */,
+				D3ECECE11D1034F70069BC94 /* PomodoroViewController.xib in Resources */,
+				D3ECECD81D1034AC0069BC94 /* PreferencesWindowController.xib in Resources */,
+				D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		D3D6FE9A1D0EB4E100DCA35A /* Sources */ = {
+		D3ECECB71D1033BF0069BC94 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3D6FEA21D0EB4E100DCA35A /* AppDelegate.swift in Sources */,
+				D3ECECD71D1034AC0069BC94 /* PreferencesWindowController.swift in Sources */,
+				D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */,
+				D3ECECE31D1034F70069BC94 /* Timer.swift in Sources */,
+				D3ECECE21D1034F70069BC94 /* PopoverRootView.swift in Sources */,
+				D3ECECE01D1034F70069BC94 /* PomodoroViewController.swift in Sources */,
+				D3ECECD21D1034860069BC94 /* AboutWindowController.swift in Sources */,
+				D3ECECDF1D1034F70069BC94 /* EventMonitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		D3D6FEA51D0EB4E200DCA35A /* MainMenu.xib */ = {
+		D3ECECC21D1033C00069BC94 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D3D6FEA61D0EB4E200DCA35A /* Base */,
+				D3ECECC31D1033C00069BC94 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -146,7 +198,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		D3D6FEA91D0EB4E200DCA35A /* Debug */ = {
+		D3ECECC61D1033C00069BC94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -191,7 +243,7 @@
 			};
 			name = Debug;
 		};
-		D3D6FEAA1D0EB4E200DCA35A /* Release */ = {
+		D3ECECC71D1033C00069BC94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -228,7 +280,7 @@
 			};
 			name = Release;
 		};
-		D3D6FEAC1D0EB4E200DCA35A /* Debug */ = {
+		D3ECECC91D1033C00069BC94 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -240,7 +292,7 @@
 			};
 			name = Debug;
 		};
-		D3D6FEAD1D0EB4E200DCA35A /* Release */ = {
+		D3ECECCA1D1033C00069BC94 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -255,24 +307,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D3D6FE991D0EB4E100DCA35A /* Build configuration list for PBXProject "Pomodoro" */ = {
+		D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Pomodoro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D3D6FEA91D0EB4E200DCA35A /* Debug */,
-				D3D6FEAA1D0EB4E200DCA35A /* Release */,
+				D3ECECC61D1033C00069BC94 /* Debug */,
+				D3ECECC71D1033C00069BC94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D3D6FEAB1D0EB4E200DCA35A /* Build configuration list for PBXNativeTarget "Pomodoro" */ = {
+		D3ECECC81D1033C00069BC94 /* Build configuration list for PBXNativeTarget "Pomodoro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D3D6FEAC1D0EB4E200DCA35A /* Debug */,
-				D3D6FEAD1D0EB4E200DCA35A /* Release */,
+				D3ECECC91D1033C00069BC94 /* Debug */,
+				D3ECECCA1D1033C00069BC94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = D3D6FE961D0EB4E100DCA35A /* Project object */;
+	rootObject = D3ECECB31D1033BF0069BC94 /* Project object */;
 }
