@@ -23,6 +23,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     let defaults = NSUserDefaults.standardUserDefaults()
     var timer: Timer!
     var isActive: Bool = false
+    var isPomodoro: Bool = true
 
     var preferencesWindow: PreferencesWindowController!
     var aboutWindow: AboutWindowController!
@@ -30,10 +31,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     var updateStatusTimer: NSTimer = NSTimer()
     
     let timeLeftShapeLayer = CAShapeLayer()
-    let bgShapeLayer = CAShapeLayer()
-    var endTime: NSDate!
-    let strokeIt = CABasicAnimation(keyPath: "strokeEnd")
+    let bgTimeLeftShapeLayer = CAShapeLayer()
+    var strokeTimeIt = CABasicAnimation(keyPath: "strokeEnd")
     
+    let targetShapeLayer = CAShapeLayer()
+    let bgTargetShapeLayer = CAShapeLayer()
+    let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,20 +46,38 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         preferencesWindow.delegate = self
         
         timer = Timer(defaults.integerForKey("pomodoroDuration"), defaults.integerForKey("breakDuration"))
-
-        drawBgShape()
-        drawTimeLeftShape()
-        
-        strokeIt.fromValue = 0.0
-        strokeIt.toValue = 1.0
-        strokeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
-        strokeIt.removedOnCompletion = false
-        pauseLayer(timeLeftShapeLayer)
-        timeLeftShapeLayer.addAnimation(strokeIt, forKey: "timeLeft")
-        
         reset()
+
+        // Animation circle for the current timer
+        drawBgShape(bgTimeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
+                    radius: 65, lineWidth: 5)
+        drawShape(timeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
+                  radius: 65, lineWidth: 5)
+        
+        strokeTimeIt.fromValue = 0.0
+        strokeTimeIt.toValue = 1.0
+        strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
+        strokeTargetIt.removedOnCompletion = true
+        pauseLayer(timeLeftShapeLayer)
+        timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        
+        // Animation circle for the target pomodoros
+        drawBgShape(bgTargetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
+                    radius: 25, lineWidth: 2)
+        drawShape(targetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
+                  radius: 25, lineWidth: 2)
+        
+        strokeTargetIt.fromValue = 0.0
+        strokeTargetIt.toValue = 1.0
+        strokeTargetIt.duration = defaults.doubleForKey("targetPomodoros")*defaults.doubleForKey("pomodoroDuration")
+        strokeTargetIt.removedOnCompletion = false
+        pauseLayer(targetShapeLayer)
+        targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
+        
+        // General configuration
         resetButton.hidden = true
         removeTaskButton.hidden = true
+        fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
         
         currentTask.placeholderAttributedString = NSAttributedString(string: "What are you working on?", attributes: [NSForegroundColorAttributeName: NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1),
             NSFontAttributeName : NSFont(name: "Lato-Light", size: 18)!])
@@ -67,7 +88,6 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func reset() {
         let pomodoroDefaultDuration = defaults.integerForKey("pomodoroDuration")
         timeLabel.stringValue = String(format: "%d:%02d", pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
-        fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
         resetButton.hidden = true
         startButton.image = NSImage(named: "play-2")
         currentTask.editable = true
@@ -81,9 +101,11 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
             isActive = false
             timer.pauseTimer()
             pauseLayer(timeLeftShapeLayer)
+            pauseLayer(targetShapeLayer)
             updateStatusTimer.invalidate()
             startButton.image = NSImage(named: "play-2")
         } else {
+            updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
             startButton.image = NSImage(named: "pause-2")
             isActive = true
             if(timer.unPause()) {
@@ -91,7 +113,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
             } else {
                 restartLayer(timeLeftShapeLayer)
             }
-            updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
+            if(isPomodoro) {
+                resumeLayer(targetShapeLayer)
+            }
         }
     }
 
@@ -99,18 +123,43 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     @IBAction func resetTimer(sender: AnyObject) {
         timer.resetTimer()
         isActive = false
+        isPomodoro = true
+        timeLabel.textColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1)
         updateStatusTimer.invalidate()
         reset()
+        pauseLayer(timeLeftShapeLayer)
+        addTimeLeftAnimation()
+    }
+    
+    /* Add a new animation for the time left. Remove previous animation before add the new one. */
+    func addTimeLeftAnimation() {
+        if(timeLeftShapeLayer.animationForKey("timeLeft") != nil) {
+            timeLeftShapeLayer.removeAnimationForKey("timeLeft")
+        }
+        
+        if(isPomodoro) {
+            strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
+            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        } else {
+            strokeTimeIt.duration = defaults.doubleForKey("breakDuration")+1
+            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        }
     }
     
     /* Start a new timer and restart the animation */
-    func startTimer(isPomodoro: Bool) {
+    func startTimer() {
+        restartLayer(timeLeftShapeLayer)
+        //resetLastPomodoro()
+
         if(isPomodoro) {
+            resumeLayer(targetShapeLayer)
+            timeLabel.textColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1)
             timer.startPomodoroTimer()
         } else {
+            timeLabel.textColor = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1)
             timer.startBreakTimer()
         }
-        restartLayer(timeLeftShapeLayer)
+        addTimeLeftAnimation()
     }
     
     /* Update the current state of the application. Warn the user when the pomodoro or break finish and ask for the next action*/
@@ -118,26 +167,33 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         if(timer.timeLeft >= 0 && timer.timer.valid) {
             timeLabel.stringValue = String(format: "%d:%02d", timer.timeLeft/60, timer.timeLeft%60)
         } else {
+            pauseLayer(targetShapeLayer)
+
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
+
             if(timer.finishedPomodoros >= defaults.integerForKey("targetPomodoros")) {
+                isPomodoro = true
                 let userWantToStartOver = dialogOKCancel("Target achieved!",
                                                     text: "Do you want to start over?",
                                                     b1Text: "Yes",
                                                     b2Text: "Cancel")
                 if(userWantToStartOver) {
-                    startTimer(true)     // start pomodoro
+                    startTimer()     // start pomodoro
                 } else {
                     resetTimer(self)
                 }
+                timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
                 let userAceptBreak = dialogOKCancel("Pomodoro completed!",
                                                     text: "Do you want to start the break?",
                                                     b1Text: "Ok",
                                                     b2Text: "New Pomodoro")
                 if(userAceptBreak) {
-                    startTimer(false)     // start break
+                    isPomodoro = false
+                    startTimer()     // start break
                 } else {
-                    startTimer(true)  // start pomodoro
+                    isPomodoro = true
+                    startTimer()  // start pomodoro
                 }
             } else {
                 let userStartNewPomodoro = dialogOKCancel("Break finished!",
@@ -145,12 +201,16 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
                                                           b1Text: "New Pomodoro",
                                                           b2Text: "Cancel")
                 if(userStartNewPomodoro) {
-                    startTimer(true)  // start pomodoro
+                    isPomodoro = true
+                    startTimer()  // start pomodoro
                 } else {
                     // stop timer and wait for user action
+                    isPomodoro = true
                     resetTimer(self)
                 }
             }
+            
+            fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
         }
     }
     
@@ -229,34 +289,32 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     //                                                                                                  //
-    //    This part of the code was taken from stackoverflow (some modifications where required...)     //
+    //  This part of the code is based on this stackoverflow answer:                                    //
     //  http://stackoverflow.com/questions/30289173/problems-animating-a-countdown-in-swift-sprite-kit  //
     //                                                                                                  //
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    func drawBgShape() {
+    func drawBgShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(CGPoint(x: startButton.frame.midX , y: startButton.frame.midY), radius:
-            65, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
-        bgShapeLayer.path = bez.CGPath(forceClose: false)
-        bgShapeLayer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
-        //bgShapeLayer.strokeColor = NSColor.blueColor().CGColor
-        bgShapeLayer.fillColor = NSColor.clearColor().CGColor
-        bgShapeLayer.lineWidth = 5
+        bez.appendBezierPathWithArcWithCenter(center, radius:
+            radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
+        layer.path = bez.CGPath(forceClose: false)
+        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
+        layer.fillColor = NSColor.clearColor().CGColor
+        layer.lineWidth = lineWidth
         mainView.wantsLayer = true
-        mainView.layer!.addSublayer(bgShapeLayer)
+        mainView.layer!.addSublayer(layer)
     }
     
-    func drawTimeLeftShape() {
+    func drawShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(CGPoint(x: startButton.frame.midX, y: startButton.frame.midY), radius:
-            65, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
-        timeLeftShapeLayer.path = bez.CGPath(forceClose: false)
-        //timeLeftShapeLayer.strokeColor = NSColor.redColor().CGColor
-        timeLeftShapeLayer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
-        timeLeftShapeLayer.fillColor = NSColor.clearColor().CGColor
-        timeLeftShapeLayer.lineWidth = 5
-        mainView.layer!.addSublayer(timeLeftShapeLayer)
+        bez.appendBezierPathWithArcWithCenter(center, radius:
+            radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
+        layer.path = bez.CGPath(forceClose: false)
+        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
+        layer.fillColor = NSColor.clearColor().CGColor
+        layer.lineWidth = lineWidth
+        mainView.layer!.addSublayer(layer)
     }
     
     func pauseLayer(layer : CALayer) {
@@ -283,6 +341,15 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     func restartLayer(layer: CALayer) {
         resetLayer(layer)
         resumeLayer(layer)
+    }
+    
+    func resetLastPomodoro() {
+        let pausedTime = targetShapeLayer.timeOffset
+        targetShapeLayer.speed = 1.0;
+        targetShapeLayer.timeOffset = 0.0;
+        targetShapeLayer.beginTime = 0.0;
+        let timeSincePause : CFTimeInterval = targetShapeLayer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
+        targetShapeLayer.beginTime = timeSincePause - (timeSincePause - (timeSincePause%defaults.doubleForKey("pomodoroDuration")))
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////
