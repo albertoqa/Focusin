@@ -30,13 +30,23 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H3n-4w-p9I">
-                        <rect key="frame" x="53" y="284" width="229" height="77"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Pomomac" id="ox5-gK-bUW">
+                        <rect key="frame" x="78" y="284" width="179" height="77"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Focusin" id="ox5-gK-bUW">
                             <font key="font" size="53" name="Lato-Light"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tJx-v7-odQ">
+                        <rect key="frame" x="20" y="20" width="295" height="48"/>
+                        <buttonCell key="cell" type="square" title="Icons by Icons8.com" bezelStyle="shadowlessSquare" image="icons8_logo" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Vox-li-b5z">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" size="15" name="Lato-Light"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="openIcons8:" target="-2" id="SLL-xv-bnJ"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
@@ -45,4 +55,7 @@
             <point key="canvasLocation" x="260.5" y="347.5"/>
         </window>
     </objects>
+    <resources>
+        <image name="icons8_logo" width="100" height="100"/>
+    </resources>
 </document>

@@ -137,6 +137,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
 
     /* Stop the current timer and reset all the values */
     @IBAction func resetTimer(sender: AnyObject) {
+        if(reloadPreferencesOnNextPomodoro) {
+            reloadPreferences()
+        }
+        
         timer.resetTimer()
         isActive = false
         isPomodoro = true
@@ -241,15 +245,25 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     @IBAction func openSettingsMenu(sender: NSButton) {
         let menu = NSMenu()
         
-        menu.insertItemWithTitle("Settings", action: #selector(PomodoroViewController.openPreferences),
+        menu.insertItemWithTitle("Reset Full Pomodoros", action: #selector(PomodoroViewController.resetFullPomodoros),
                                  keyEquivalent: "", atIndex: 0)
+        menu.insertItem(NSMenuItem.separatorItem(), atIndex: 1)
+        menu.insertItemWithTitle("Settings", action: #selector(PomodoroViewController.openPreferences),
+                                 keyEquivalent: "", atIndex: 2)
         menu.insertItemWithTitle("About", action: #selector(PomodoroViewController.openAbout),
-                                 keyEquivalent: "", atIndex: 1)
-        menu.insertItem(NSMenuItem.separatorItem(), atIndex: 2)
-        menu.insertItemWithTitle("Quit", action: #selector(PomodoroViewController.quitApp),
                                  keyEquivalent: "", atIndex: 3)
+        menu.insertItem(NSMenuItem.separatorItem(), atIndex: 4)
+        menu.insertItemWithTitle("Quit", action: #selector(PomodoroViewController.quitApp),
+                                 keyEquivalent: "", atIndex: 5)
 
         NSMenu.popUpContextMenu(menu, withEvent: NSApplication.sharedApplication().currentEvent!, forView: sender as NSButton)
+    }
+    
+    /* Set to 0 the current full pomodoros completed */
+    func resetFullPomodoros() {
+        resetLayer(targetShapeLayer)
+        timer.finishedPomodoros = 0
+        fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
     }
     
     /* Open a new window with the preferences of the application */
@@ -283,7 +297,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         reloadPreferencesOnNextPomodoro = false
         timer.pomodoroDuration = defaults.integerForKey("pomodoroDuration")
         timer.breakDuration = defaults.integerForKey("breakDuration")
-        
+        timer.timeLeft = timer.pomodoroDuration
+        resetTimer(self)
     }
     
     /* Show an alert to the user */

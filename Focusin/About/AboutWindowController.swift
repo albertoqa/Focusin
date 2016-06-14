@@ -21,4 +21,7 @@ class AboutWindowController: NSWindowController {
         return "AboutWindowController"
     }
     
+    @IBAction func openIcons8(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://icons8.com")!)
+    }
 }
