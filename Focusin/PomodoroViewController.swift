@@ -33,14 +33,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     var notificationsHandler: NotificationsHandler!
     
     var updateStatusTimer: NSTimer = NSTimer()
-    
-    let timeLeftShapeLayer = CAShapeLayer()
-    let bgTimeLeftShapeLayer = CAShapeLayer()
-    var strokeTimeIt = CABasicAnimation(keyPath: "strokeEnd")
-    
-    let targetShapeLayer = CAShapeLayer()
-    let bgTargetShapeLayer = CAShapeLayer()
-    let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
+    var circleAnimations: CircleAnimation!
     
     init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton) {
         self.buttonBar = button
@@ -61,36 +54,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         notificationsHandler = NotificationsHandler()
         notificationsHandler.delegate = self
         
+        circleAnimations = CircleAnimation(popoverRootView: mainView, startButton: startButton, fullPomodoros: fullPomodoros)
+        
         timer = Timer(defaults.integerForKey("pomodoroDuration"), defaults.integerForKey("breakDuration"))
         showTimeInBar = defaults.integerForKey("showTimeInBar") == NSOnState
         reset()
-        
-        // Animation circle for the current timer
-        drawBgShape(bgTimeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
-                    radius: 65, lineWidth: 5)
-        drawShape(timeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
-                  radius: 65, lineWidth: 5)
-        
-        strokeTimeIt.fromValue = 0.0
-        strokeTimeIt.toValue = 1.0
-        strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
-        strokeTargetIt.removedOnCompletion = true
-        pauseLayer(timeLeftShapeLayer)
-        timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
-        
-        // Animation circle for the target pomodoros
-        drawBgShape(bgTargetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
-                    radius: 25, lineWidth: 2)
-        drawShape(targetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
-                  radius: 25, lineWidth: 2)
-        
-        strokeTargetIt.fromValue = 0.0
-        strokeTargetIt.toValue = 1.0
-        strokeTargetIt.duration = defaults.doubleForKey("targetPomodoros")*defaults.doubleForKey("pomodoroDuration")
-        strokeTargetIt.removedOnCompletion = false
-        pauseLayer(targetShapeLayer)
-        targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
-        
+    
         // General configuration
         resetButton.hidden = true
         removeTaskButton.hidden = true
@@ -126,9 +95,6 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         }
     }
     
-    
-
-    
     /* Set the timer label to the user preferred pomodoro duration, stop the current timer, hide reset button,
      set start button to play and reset timeLeftShapeLayer */
     func reset() {
@@ -140,7 +106,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         resetButton.hidden = true
         startButton.image = NSImage(named: "play-2")
         currentTask.editable = true
-        resetLayer(timeLeftShapeLayer)
+        circleAnimations.resetLayer(Circles.TIME)
     }
     
     /* Start the timer (if paused or stoped) or pause the timer (if active) */
@@ -149,8 +115,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         if(isActive) {
             isActive = false
             timer.pauseTimer()
-            pauseLayer(timeLeftShapeLayer)
-            pauseLayer(targetShapeLayer)
+            circleAnimations.pauseLayer(Circles.TIME)
+            circleAnimations.pauseLayer(Circles.TARGET)
             updateStatusTimer.invalidate()
             startButton.image = NSImage(named: "play-2")
         } else {
@@ -160,12 +126,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             startButton.image = NSImage(named: "pause-2")
             isActive = true
             if(timer.unPause()) {
-                resumeLayer(timeLeftShapeLayer)
+                circleAnimations.resumeLayer(Circles.TIME)
             } else {
-                restartLayer(timeLeftShapeLayer)
+                circleAnimations.restartLayer(Circles.TIME)
             }
             if(isPomodoro) {
-                resumeLayer(targetShapeLayer)
+                circleAnimations.resumeLayer(Circles.TARGET)
             }
         }
     }
@@ -182,23 +148,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         timeLabel.textColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1)
         updateStatusTimer.invalidate()
         reset()
-        pauseLayer(timeLeftShapeLayer)
-        addTimeLeftAnimation()
-    }
-    
-    /* Add a new animation for the time left. Remove previous animation before add the new one. */
-    func addTimeLeftAnimation() {
-        if(timeLeftShapeLayer.animationForKey("timeLeft") != nil) {
-            timeLeftShapeLayer.removeAnimationForKey("timeLeft")
-        }
-        
-        if(isPomodoro) {
-            strokeTimeIt.duration = defaults.doubleForKey("pomodoroDuration")+1
-            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
-        } else {
-            strokeTimeIt.duration = defaults.doubleForKey("breakDuration")+1
-            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
-        }
+        circleAnimations.pauseLayer(Circles.TIME)
+        circleAnimations.addTimeLeftAnimation(isPomodoro)
     }
     
     /* Start a new timer and restart the animation */
@@ -206,18 +157,18 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         if(!updateStatusTimer.valid) {
             updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
         }
-        restartLayer(timeLeftShapeLayer)
+        circleAnimations.restartLayer(Circles.TIME)
         //resetLastPomodoro()
         
         if(isPomodoro) {
-            resumeLayer(targetShapeLayer)
+            circleAnimations.resumeLayer(Circles.TARGET)
             timeLabel.textColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1)
             timer.startPomodoroTimer()
         } else {
             timeLabel.textColor = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1)
             timer.startBreakTimer()
         }
-        addTimeLeftAnimation()
+        circleAnimations.addTimeLeftAnimation(isPomodoro)
     }
     
     /* Update the current state of the application. Warn the user when the pomodoro or break finish and ask for the next action*/
@@ -234,7 +185,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                 reloadPreferences()
             }
             
-            pauseLayer(targetShapeLayer)
+            circleAnimations.pauseLayer(Circles.TARGET)
             
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
             
@@ -283,7 +234,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Set to 0 the current full pomodoros completed */
     func resetFullPomodoros() {
-        resetLayer(targetShapeLayer)
+        circleAnimations.resetLayer(Circles.TARGET)
         timer.finishedPomodoros = 0
         fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
     }
@@ -341,122 +292,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         currentTask.becomeFirstResponder()
         sender.hidden = true
     }
-    
-    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    //                                                                                                  //
-    //  This part of the code is based on this stackoverflow answer:                                    //
-    //  http://stackoverflow.com/questions/30289173/problems-animating-a-countdown-in-swift-sprite-kit  //
-    //                                                                                                  //
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    func drawBgShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
-        let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(center, radius:
-            radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
-        layer.path = bez.CGPath(forceClose: false)
-        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
-        layer.fillColor = NSColor.clearColor().CGColor
-        layer.lineWidth = lineWidth
-        mainView.wantsLayer = true
-        mainView.layer!.addSublayer(layer)
-    }
-    
-    func drawShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
-        let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(center, radius:
-            radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
-        layer.path = bez.CGPath(forceClose: false)
-        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
-        layer.fillColor = NSColor.clearColor().CGColor
-        layer.lineWidth = lineWidth
-        mainView.layer!.addSublayer(layer)
-    }
-    
-    func pauseLayer(layer : CALayer) {
-        let pausedTime : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
-        layer.speed = 0.0
-        layer.timeOffset = pausedTime
-    }
-    
-    func resumeLayer(layer: CALayer) {
-        let pausedTime = layer.timeOffset
-        layer.speed = 1.0;
-        layer.timeOffset = 0.0;
-        layer.beginTime = 0.0;
-        let timeSincePause : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
-        layer.beginTime = timeSincePause
-    }
-    
-    func resetLayer(layer: CALayer) {
-        layer.speed = 0.0;
-        layer.timeOffset = 0.0;
-        layer.beginTime = 0.0;
-    }
-    
-    func restartLayer(layer: CALayer) {
-        resetLayer(layer)
-        resumeLayer(layer)
-    }
-    
-    func resetLastPomodoro() {
-        let pausedTime = targetShapeLayer.timeOffset
-        targetShapeLayer.speed = 1.0;
-        targetShapeLayer.timeOffset = 0.0;
-        targetShapeLayer.beginTime = 0.0;
-        let timeSincePause : CFTimeInterval = targetShapeLayer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
-        targetShapeLayer.beginTime = timeSincePause - (timeSincePause - (timeSincePause%defaults.doubleForKey("pomodoroDuration")))
-    }
-    
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
 }
 
-extension Double {
-    var degreesToRadians : CGFloat {
-        return CGFloat(self) * CGFloat(M_PI) / 180.0
-    }
-}
-
-extension NSBezierPath {
-    func CGPath(forceClose forceClose:Bool) -> CGPathRef? {
-        var cgPath:CGPathRef? = nil
-        
-        let numElements = self.elementCount
-        if numElements > 0 {
-            let newPath = CGPathCreateMutable()
-            let points = NSPointArray.alloc(3)
-            var bDidClosePath:Bool = true
-            
-            for i in 0 ..< numElements {
-                
-                switch elementAtIndex(i, associatedPoints:points) {
-                    
-                case NSBezierPathElement.MoveToBezierPathElement:
-                    CGPathMoveToPoint(newPath, nil, points[0].x, points[0].y )
-                    
-                case NSBezierPathElement.LineToBezierPathElement:
-                    CGPathAddLineToPoint(newPath, nil, points[0].x, points[0].y )
-                    bDidClosePath = false
-                    
-                case NSBezierPathElement.CurveToBezierPathElement:
-                    CGPathAddCurveToPoint(newPath, nil, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y )
-                    bDidClosePath = false
-                    
-                case NSBezierPathElement.ClosePathBezierPathElement:
-                    CGPathCloseSubpath(newPath)
-                    bDidClosePath = true
-                }
-                
-                if forceClose && !bDidClosePath {
-                    CGPathCloseSubpath(newPath)
-                }
-            }
-            cgPath = CGPathCreateCopy(newPath)
-        }
-        return cgPath
-    }
-}
 
 
