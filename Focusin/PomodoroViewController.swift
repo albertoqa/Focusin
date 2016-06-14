@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotificationCenterDelegate {
+class PomodoroViewController: NSViewController, PreferencesDelegate, NotificationsDelegate {
     
     @IBOutlet var mainView: PopoverRootView!
     var buttonBar: NSStatusBarButton
@@ -42,9 +42,6 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
     let bgTargetShapeLayer = CAShapeLayer()
     let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
     
-    var caller: Caller = Caller.BREAK
-    var actionButtonPressed: Bool = false
-    
     init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton) {
         self.buttonBar = button
         super.init(nibName: nibName, bundle: bundle)!
@@ -62,6 +59,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
         preferencesWindow.delegate = self
         
         notificationsHandler = NotificationsHandler()
+        notificationsHandler.delegate = self
         
         timer = Timer(defaults.integerForKey("pomodoroDuration"), defaults.integerForKey("breakDuration"))
         showTimeInBar = defaults.integerForKey("showTimeInBar") == NSOnState
@@ -100,66 +98,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
         
         currentTask.placeholderAttributedString = NSAttributedString(string: "What are you working on?", attributes: [NSForegroundColorAttributeName: NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1),
             NSFontAttributeName : NSFont(name: "Lato-Light", size: 18)!])
-        
-        NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
     }
     
-    /* Detect if the user interact with the notification */
-    func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
-        if(notification.activationType == NSUserNotificationActivationType.ActionButtonClicked) {
-            self.handleNotifications(notification, isActionButton: true)
-        }
-    }
     
-    /* Show always the notification, even if the app is open */
-    func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
-        return true
-    }
-    
-    /* Detect dismissed notification -> in this app that is considered as press the other button */
-    func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            var notificationStillPresent = true
-            while (notificationStillPresent) {
-                NSThread.sleepForTimeInterval(1)
-                notificationStillPresent = false
-                for deliveredNotification in NSUserNotificationCenter.defaultUserNotificationCenter().deliveredNotifications {
-                    if deliveredNotification.identifier == notification.identifier {
-                        notificationStillPresent = true
-                    }
-                }
-            }
-            dispatch_async(dispatch_get_main_queue()) {
-                self.handleNotifications(notification, isActionButton: false)
-            }
-        }
-    }
-    
-    /* Show a new notification on the Notification Center */
-    func showNotification(title: String, text: String, actionTitle: String, otherTitle: String) -> Void {
-        let notification = NSUserNotification()
-        notification.title = title
-        notification.informativeText = text
-        notification.soundName = NSUserNotificationDefaultSoundName
-        notification.actionButtonTitle = actionTitle
-        notification.otherButtonTitle = otherTitle
-        NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
-    }
-    
-    func handleNotifications(notification: NSUserNotification, isActionButton: Bool) {
-        if(isActionButton) {
-            actionButtonPressed = true
-            handleNotificationAction()
-        } else if(!actionButtonPressed) {
-            actionButtonPressed = false
-            handleNotificationOther()
-        } else {
-            actionButtonPressed = false
-        }
-    }
-    
-    func handleNotificationAction() {
+    func handleNotificationAction(caller: Caller) {
         if(caller == Caller.TARGET) {
             startTimer()
         } else if(caller == Caller.POMODORO) {
@@ -171,7 +113,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
         }
     }
     
-    func handleNotificationOther() {
+    func handleNotificationOther(caller: Caller) {
         if(caller == Caller.TARGET) {
             resetTimer(self)
         } else if(caller == Caller.POMODORO) {
@@ -298,21 +240,21 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
             
             if(timer.finishedPomodoros >= defaults.integerForKey("targetPomodoros")) {
                 isPomodoro = true
-                caller = Caller.TARGET
-                showNotification("Target achieved!",
+                notificationsHandler.caller = Caller.TARGET
+                notificationsHandler.showNotification("Target achieved!",
                                  text: "Do you want to start over?",
                                  actionTitle: "Yes",
                                  otherTitle: "Cancel")
                 timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
-                caller = Caller.POMODORO
-                showNotification("Pomodoro completed!",
+                notificationsHandler.caller = Caller.POMODORO
+                notificationsHandler.showNotification("Pomodoro completed!",
                                  text: "Do you want to start the break?",
                                  actionTitle: "Ok",
                                  otherTitle: "New Pomodoro")
             } else {
-                caller = Caller.BREAK
-                showNotification("Break finished!",
+                notificationsHandler.caller = Caller.BREAK
+                notificationsHandler.showNotification("Break finished!",
                                  text: "Do you want to start a new pomodoro?",
                                  actionTitle: "New Pomodoro", otherTitle: "Cancel")
             }
@@ -379,21 +321,6 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotif
         timer.breakDuration = defaults.integerForKey("breakDuration")
         timer.timeLeft = timer.pomodoroDuration
         resetTimer(self)
-    }
-    
-    /* Show an alert to the user */
-    func dialogOKCancel(question: String, text: String, b1Text: String, b2Text: String) -> Bool {
-        let myPopup: NSAlert = NSAlert()
-        myPopup.messageText = question
-        myPopup.informativeText = text
-        myPopup.alertStyle = NSAlertStyle.WarningAlertStyle
-        myPopup.addButtonWithTitle(b1Text)
-        myPopup.addButtonWithTitle(b2Text)
-        let res = myPopup.runModal()
-        if res == NSAlertFirstButtonReturn {
-            return true
-        }
-        return false
     }
     
     /* Save the current text and lose focus on the NSTextFiel */

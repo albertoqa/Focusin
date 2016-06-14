@@ -13,6 +13,10 @@ protocol NotificationsDelegate {
     func handleNotificationOther(caller: Caller)
 }
 
+enum Caller {
+    case TARGET, POMODORO, BREAK
+}
+
 public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     
     var delegate: NotificationsDelegate?
@@ -91,8 +95,19 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
         delegate?.handleNotificationOther(caller)
     }
     
-}
-
-enum Caller {
-    case TARGET, POMODORO, BREAK
+    /* Show an alert to the user */
+    func dialogOKCancel(question: String, text: String, b1Text: String, b2Text: String) -> Bool {
+        let myPopup: NSAlert = NSAlert()
+        myPopup.messageText = question
+        myPopup.informativeText = text
+        myPopup.alertStyle = NSAlertStyle.WarningAlertStyle
+        myPopup.addButtonWithTitle(b1Text)
+        myPopup.addButtonWithTitle(b2Text)
+        let res = myPopup.runModal()
+        if res == NSAlertFirstButtonReturn {
+            return true
+        }
+        return false
+    }
+    
 }
