@@ -27,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //let defaultPomodoroDuration = 5
         //let defaultBreakDuration = 2
         //let defaultTargetPomodoros = 3
+        NSUserDefaults.standardUserDefaults().setInteger(5, forKey: "pomodoroDuration")
         
         if(NSUserDefaults.standardUserDefaults().stringForKey("pomodoroDuration") == nil) {
             NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: "pomodoroDuration")

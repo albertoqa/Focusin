@@ -8,8 +8,8 @@
 
 import Cocoa
 
-class PomodoroViewController: NSViewController, PreferencesDelegate {
-
+class PomodoroViewController: NSViewController, PreferencesDelegate, NSUserNotificationCenterDelegate {
+    
     @IBOutlet var mainView: PopoverRootView!
     var buttonBar: NSStatusBarButton
     
@@ -27,9 +27,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     var isPomodoro: Bool = true
     var reloadPreferencesOnNextPomodoro = false
     var showTimeInBar: Bool = true
-
+    
     var preferencesWindow: PreferencesWindowController!
     var aboutWindow: AboutWindowController!
+    var notificationsHandler: NotificationsHandler!
     
     var updateStatusTimer: NSTimer = NSTimer()
     
@@ -40,6 +41,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     let targetShapeLayer = CAShapeLayer()
     let bgTargetShapeLayer = CAShapeLayer()
     let strokeTargetIt = CABasicAnimation(keyPath: "strokeEnd")
+    
+    var caller: Caller = Caller.BREAK
+    var actionButtonPressed: Bool = false
     
     init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton) {
         self.buttonBar = button
@@ -57,10 +61,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         aboutWindow = AboutWindowController()
         preferencesWindow.delegate = self
         
+        notificationsHandler = NotificationsHandler()
+        
         timer = Timer(defaults.integerForKey("pomodoroDuration"), defaults.integerForKey("breakDuration"))
         showTimeInBar = defaults.integerForKey("showTimeInBar") == NSOnState
         reset()
-
+        
         // Animation circle for the current timer
         drawBgShape(bgTimeLeftShapeLayer, center: CGPoint(x: startButton.frame.midX, y: startButton.frame.midY),
                     radius: 65, lineWidth: 5)
@@ -91,12 +97,97 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         resetButton.hidden = true
         removeTaskButton.hidden = true
         fullPomodoros.stringValue = "0/" + defaults.stringForKey("targetPomodoros")!
-
+        
         currentTask.placeholderAttributedString = NSAttributedString(string: "What are you working on?", attributes: [NSForegroundColorAttributeName: NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1),
             NSFontAttributeName : NSFont(name: "Lato-Light", size: 18)!])
+        
+        NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
     }
     
-    /* Set the timer label to the user preferred pomodoro duration, stop the current timer, hide reset button, 
+    /* Detect if the user interact with the notification */
+    func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
+        if(notification.activationType == NSUserNotificationActivationType.ActionButtonClicked) {
+            self.handleNotifications(notification, isActionButton: true)
+        }
+    }
+    
+    /* Show always the notification, even if the app is open */
+    func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
+        return true
+    }
+    
+    /* Detect dismissed notification -> in this app that is considered as press the other button */
+    func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+            var notificationStillPresent = true
+            while (notificationStillPresent) {
+                NSThread.sleepForTimeInterval(1)
+                notificationStillPresent = false
+                for deliveredNotification in NSUserNotificationCenter.defaultUserNotificationCenter().deliveredNotifications {
+                    if deliveredNotification.identifier == notification.identifier {
+                        notificationStillPresent = true
+                    }
+                }
+            }
+            dispatch_async(dispatch_get_main_queue()) {
+                self.handleNotifications(notification, isActionButton: false)
+            }
+        }
+    }
+    
+    /* Show a new notification on the Notification Center */
+    func showNotification(title: String, text: String, actionTitle: String, otherTitle: String) -> Void {
+        let notification = NSUserNotification()
+        notification.title = title
+        notification.informativeText = text
+        notification.soundName = NSUserNotificationDefaultSoundName
+        notification.actionButtonTitle = actionTitle
+        notification.otherButtonTitle = otherTitle
+        NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
+    }
+    
+    func handleNotifications(notification: NSUserNotification, isActionButton: Bool) {
+        if(isActionButton) {
+            actionButtonPressed = true
+            handleNotificationAction()
+        } else if(!actionButtonPressed) {
+            actionButtonPressed = false
+            handleNotificationOther()
+        } else {
+            actionButtonPressed = false
+        }
+    }
+    
+    func handleNotificationAction() {
+        if(caller == Caller.TARGET) {
+            startTimer()
+        } else if(caller == Caller.POMODORO) {
+            isPomodoro = false
+            startTimer()
+        } else if(caller == Caller.BREAK) {
+            isPomodoro = true
+            startTimer()
+        }
+    }
+    
+    func handleNotificationOther() {
+        if(caller == Caller.TARGET) {
+            resetTimer(self)
+        } else if(caller == Caller.POMODORO) {
+            isPomodoro = true
+            startTimer()  // start pomodoro
+        } else if(caller == Caller.BREAK) {
+            // stop timer and wait for user action
+            isPomodoro = true
+            resetTimer(self)
+        }
+    }
+    
+    
+
+    
+    /* Set the timer label to the user preferred pomodoro duration, stop the current timer, hide reset button,
      set start button to play and reset timeLeftShapeLayer */
     func reset() {
         let pomodoroDefaultDuration = defaults.integerForKey("pomodoroDuration")
@@ -121,7 +212,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
             updateStatusTimer.invalidate()
             startButton.image = NSImage(named: "play-2")
         } else {
-            updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
+            if(!updateStatusTimer.valid) {
+                updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
+            }
             startButton.image = NSImage(named: "pause-2")
             isActive = true
             if(timer.unPause()) {
@@ -134,7 +227,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
             }
         }
     }
-
+    
     /* Stop the current timer and reset all the values */
     @IBAction func resetTimer(sender: AnyObject) {
         if(reloadPreferencesOnNextPomodoro) {
@@ -168,9 +261,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     
     /* Start a new timer and restart the animation */
     func startTimer() {
+        if(!updateStatusTimer.valid) {
+            updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
+        }
         restartLayer(timeLeftShapeLayer)
         //resetLastPomodoro()
-
+        
         if(isPomodoro) {
             resumeLayer(targetShapeLayer)
             timeLabel.textColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1)
@@ -190,51 +286,35 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
                 buttonBar.title = timeLabel.stringValue
             }
         } else {
+            updateStatusTimer.invalidate()
+            
             if(reloadPreferencesOnNextPomodoro) {
                 reloadPreferences()
             }
             
             pauseLayer(targetShapeLayer)
-
+            
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
-
+            
             if(timer.finishedPomodoros >= defaults.integerForKey("targetPomodoros")) {
                 isPomodoro = true
-                let userWantToStartOver = dialogOKCancel("Target achieved!",
-                                                    text: "Do you want to start over?",
-                                                    b1Text: "Yes",
-                                                    b2Text: "Cancel")
-                if(userWantToStartOver) {
-                    startTimer()     // start pomodoro
-                } else {
-                    resetTimer(self)
-                }
+                caller = Caller.TARGET
+                showNotification("Target achieved!",
+                                 text: "Do you want to start over?",
+                                 actionTitle: "Yes",
+                                 otherTitle: "Cancel")
                 timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
-                let userAceptBreak = dialogOKCancel("Pomodoro completed!",
-                                                    text: "Do you want to start the break?",
-                                                    b1Text: "Ok",
-                                                    b2Text: "New Pomodoro")
-                if(userAceptBreak) {
-                    isPomodoro = false
-                    startTimer()     // start break
-                } else {
-                    isPomodoro = true
-                    startTimer()  // start pomodoro
-                }
+                caller = Caller.POMODORO
+                showNotification("Pomodoro completed!",
+                                 text: "Do you want to start the break?",
+                                 actionTitle: "Ok",
+                                 otherTitle: "New Pomodoro")
             } else {
-                let userStartNewPomodoro = dialogOKCancel("Break finished!",
-                                                          text: "Do you want to start a new pomodoro?",
-                                                          b1Text: "New Pomodoro",
-                                                          b2Text: "Cancel")
-                if(userStartNewPomodoro) {
-                    isPomodoro = true
-                    startTimer()  // start pomodoro
-                } else {
-                    // stop timer and wait for user action
-                    isPomodoro = true
-                    resetTimer(self)
-                }
+                caller = Caller.BREAK
+                showNotification("Break finished!",
+                                 text: "Do you want to start a new pomodoro?",
+                                 actionTitle: "New Pomodoro", otherTitle: "Cancel")
             }
             
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + "/" + defaults.stringForKey("targetPomodoros")!
@@ -255,7 +335,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
         menu.insertItem(NSMenuItem.separatorItem(), atIndex: 4)
         menu.insertItemWithTitle("Quit", action: #selector(PomodoroViewController.quitApp),
                                  keyEquivalent: "", atIndex: 5)
-
+        
         NSMenu.popUpContextMenu(menu, withEvent: NSApplication.sharedApplication().currentEvent!, forView: sender as NSButton)
     }
     
@@ -402,7 +482,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate {
     }
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    
     
 }
 
