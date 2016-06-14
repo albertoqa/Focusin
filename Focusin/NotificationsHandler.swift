@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Cocoa
 
 protocol NotificationsDelegate {
     func handleNotificationAction(caller: Caller)
