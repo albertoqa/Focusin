@@ -9,28 +9,31 @@
 import Foundation
 import Cocoa
 
+/* The delegate must implement the methods for control the action to perform for each notification */
 protocol NotificationsDelegate {
     func handleNotificationAction(caller: Caller)
     func handleNotificationOther(caller: Caller)
 }
 
+/* Who is invoking the notification? The point of the application who create the notification. */
 enum Caller {
     case TARGET, POMODORO, BREAK
 }
 
+/* Create and handle interaction with user notifications */
 public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     
     var delegate: NotificationsDelegate?
     
     var caller: Caller = Caller.BREAK
-    var actionButtonPressed: Bool = false
+    var actionButtonPressed: Bool = false   // allows to differenciate between the buttons of the notification
     
     override init() {
         super.init()
         NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
     }
     
-    /* Detect if the user interact with the notification */
+    /* Detect if the user interact with the notification - real action button */
     public func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
         if(notification.activationType == NSUserNotificationActivationType.ActionButtonClicked) {
             self.handleNotifications(notification, isActionButton: true)
