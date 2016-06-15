@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import ServiceManagement
 
 /* The delegate must implement the methods to take action for the new preferences */
 protocol PreferencesDelegate {
@@ -24,12 +25,16 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     @IBOutlet weak var targetPomodoros: NSTextField!
     @IBOutlet weak var showNotifications: NSButton!
     @IBOutlet weak var showTimeInBar: NSButton!
+    @IBOutlet weak var startAtLogin: NSButton!
     
     var closedWithButton: Bool = false
     let seconds: Int = 60
     
     let errorTitle = "Invalid value"
     let buttonTitle = "Ok"
+    let errorPomodoro = "Pomodoro duration must be between 1 - 500"
+    let errorBreak = "Break duration must be between 1 - 500"
+    let errorTarget = "Target pomodoros must be between 1 - 99"
     
     let MIN_TIME = 1
     let MAX_TIME = 500
@@ -48,6 +53,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         targetPomodoros.integerValue = defaults.integerForKey(Defaults.targetKey)
         showNotifications.state = defaults.integerForKey(Defaults.showNotificationsKey)
         showTimeInBar.integerValue = defaults.integerForKey(Defaults.showTimeKey)
+        startAtLogin.integerValue = defaults.integerForKey(Defaults.startAtLogin)
     }
     
     override var windowNibName : String! {
@@ -59,18 +65,22 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         closedWithButton = true
         
         if(pomodoroDuration.integerValue < MIN_TIME || pomodoroDuration.integerValue > MAX_TIME) {
-            dialogError("Pomodoro duration must be between 1 - 500")
+            dialogError(errorPomodoro)
         } else if(breakDuration.integerValue < MIN_TIME || breakDuration.integerValue > MAX_TIME) {
-            dialogError("Break duration must be between 1 - 500")
+            dialogError(errorBreak)
         } else if(targetPomodoros.integerValue < MIN_TARGET || targetPomodoros.integerValue > MAX_TARGET) {
-            dialogError("Target pomodoros must be between 1 - 99")
+            dialogError(errorTarget)
         } else {
             defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: Defaults.pomodoroKey)
             defaults.setValue(breakDuration.integerValue * seconds, forKey: Defaults.breakKey)
             defaults.setValue(targetPomodoros.integerValue, forKey: Defaults.targetKey)
             defaults.setValue(showNotifications.state, forKey: Defaults.showNotificationsKey)
             defaults.setValue(showTimeInBar.state, forKey: Defaults.showTimeKey)
+            defaults.setValue(startAtLogin.state, forKey: Defaults.startAtLogin)
 
+            let launcherAppIdentifier = "com.albertoquesada.LauncherApplication"
+            SMLoginItemSetEnabled(launcherAppIdentifier, startAtLogin.state == NSOnState)
+            
             closeAndSave()
             self.window?.close()
         }
@@ -94,6 +104,5 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         }
         return false
     }
-
 
 }

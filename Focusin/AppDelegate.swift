@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import ServiceManagement
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -28,7 +29,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let defaultTargetPomodoros = 10
         
         //NSUserDefaults.standardUserDefaults().setInteger(6, forKey: Defaults.pomodoroKey)
-        
+
         /* On first time launch set the default values */
         if(NSUserDefaults.standardUserDefaults().stringForKey(Defaults.pomodoroKey) == nil) {
             NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: Defaults.pomodoroKey)
@@ -36,6 +37,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: Defaults.targetKey)
             NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showTimeKey)
             NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showNotificationsKey)
+            NSUserDefaults.standardUserDefaults().setInteger(NSOffState, forKey: Defaults.startAtLogin)
+        }
+        
+        let launcherAppIdentifier = "com.albertoquesada.LauncherApplication"
+        SMLoginItemSetEnabled(launcherAppIdentifier, NSUserDefaults.standardUserDefaults().integerForKey(Defaults.startAtLogin) == NSOnState)
+        
+        var startedAtLogin = false
+        for app in NSWorkspace.sharedWorkspace().runningApplications {
+            if(app.bundleIdentifier == launcherAppIdentifier) {
+                startedAtLogin = true
+                break
+            }
+        }
+        
+        if startedAtLogin {
+            NSDistributedNotificationCenter.defaultCenter().postNotificationName("killme", object: NSBundle.mainBundle().bundleIdentifier!)
         }
         
         // Set the icon for the menu bar

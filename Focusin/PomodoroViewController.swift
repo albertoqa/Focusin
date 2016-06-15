@@ -27,6 +27,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     var isPomodoro: Bool = true
     var reloadPreferencesOnNextPomodoro = false
     var showTimeInBar: Bool = true
+    var showNotifications: Bool = true
     
     var preferencesWindow: PreferencesWindowController!
     var aboutWindow: AboutWindowController!
@@ -73,6 +74,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         
         timer = Timer(defaults.integerForKey(Defaults.pomodoroKey), defaults.integerForKey(Defaults.breakKey))
         showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
+        showNotifications = defaults.integerForKey(Defaults.showNotificationsKey) == NSOnState
         reset()
     
         resetButton.hidden = true
@@ -88,9 +90,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         let pomodoroDefaultDuration = defaults.integerForKey(Defaults.pomodoroKey)
         timeLabel.stringValue = String(format: timeFormat, pomodoroDefaultDuration/seconds, pomodoroDefaultDuration%seconds)
         timeLabel.textColor = orange
-        if(showTimeInBar) {
-            buttonBar.title = timeLabel.stringValue
-        }
+        buttonBar.title = showTimeInBar ? timeLabel.stringValue : ""
         resetButton.hidden = true
         startButton.image = NSImage(named: iconPlay)
     }
@@ -179,22 +179,28 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             if(timer.finishedPomodoros >= defaults.integerForKey(Defaults.targetKey)) {
                 isPomodoro = true
                 notificationsHandler.caller = Caller.TARGET
-                notificationsHandler.showNotification("Target achieved!",
+                if(showNotifications) {
+                    notificationsHandler.showNotification("Target achieved!",
                                  text: "Do you want to start over?",
                                  actionTitle: "Yes",
                                  otherTitle: "Cancel")
+                }
                 timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
                 notificationsHandler.caller = Caller.POMODORO
-                notificationsHandler.showNotification("Pomodoro completed!",
+                if(showNotifications) {
+                    notificationsHandler.showNotification("Pomodoro completed!",
                                  text: "Do you want to start the break?",
                                  actionTitle: "Ok",
                                  otherTitle: "New Pomodoro")
+                }
             } else {
                 notificationsHandler.caller = Caller.BREAK
-                notificationsHandler.showNotification("Break finished!",
+                if(showNotifications) {
+                    notificationsHandler.showNotification("Break finished!",
                                  text: "Do you want to start a new pomodoro?",
                                  actionTitle: "New Pomodoro", otherTitle: "Cancel")
+                }
             }
             
             fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + defaults.stringForKey(Defaults.targetKey)!
@@ -275,6 +281,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         timer.pomodoroDuration = defaults.integerForKey(Defaults.pomodoroKey)
         timer.breakDuration = defaults.integerForKey(Defaults.breakKey)
         timer.timeLeft = timer.pomodoroDuration
+        self.showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
+        self.showNotifications = defaults.integerForKey(Defaults.showNotificationsKey) == NSOnState
         resetTimer(self)
     }
     

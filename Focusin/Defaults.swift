@@ -14,4 +14,5 @@ struct Defaults {
     static let targetKey = "targetPomodoros"
     static let showTimeKey = "showTimeInBar"
     static let showNotificationsKey = "showNotifications"
+    static let startAtLogin = "startAtLogin"
 }
