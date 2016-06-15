@@ -93,7 +93,7 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
         } else if(openApp) {
             handleNotificationOpenApp()
             removeAllNotifications()
-        } else if(!actionButtonPressed) {
+        } else if(!actionButtonPressed) {           // TODO this is not working for the "Close" notifications
             actionButtonPressed = false
             handleNotificationOther(caller)
         } else {
