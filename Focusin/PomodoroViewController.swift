@@ -13,6 +13,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     @IBOutlet var mainView: PopoverRootView!
     var buttonBar: NSStatusBarButton
     var popoverView: NSPopover
+    var tasksView: NSPopover = NSPopover()
     
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var resetButton: NSButton!
@@ -93,6 +94,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         
         currentTask.placeholderAttributedString = NSAttributedString(string: currentTaskLabel, attributes: [NSForegroundColorAttributeName: gray, NSFontAttributeName : NSFont(name: font, size: currentTaskSize)!])
         
+        tasksView.contentViewController = TasksViewController(nibName: "TasksViewController", bundle: nil, popover: popoverView, pomodoroView: self)
+        tasksView.behavior = NSPopoverBehavior.Transient
     }
     
     /* Reset the view elements and get them ready for a new pomodoro */
@@ -134,9 +137,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Show the todo list of tasks */
     @IBAction func showToDoList(sender: AnyObject) {
-        popoverView.contentViewController = TasksViewController(nibName: "TasksViewController", bundle: nil, popover: popoverView, pomodoroView: self)
+        tasksView.showRelativeToRect(longBreak.bounds, ofView: longBreak, preferredEdge: NSRectEdge.MinY)
     }
-    
     
     /* Stop the current timer and reset all the values. */
     @IBAction func resetTimer(sender: AnyObject) {
