@@ -99,19 +99,4 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
         delegate?.handleNotificationOther(caller)
     }
     
-    /* Show an alert to the user */
-    func dialogOKCancel(question: String, text: String, b1Text: String, b2Text: String) -> Bool {
-        let myPopup: NSAlert = NSAlert()
-        myPopup.messageText = question
-        myPopup.informativeText = text
-        myPopup.alertStyle = NSAlertStyle.WarningAlertStyle
-        myPopup.addButtonWithTitle(b1Text)
-        myPopup.addButtonWithTitle(b2Text)
-        let res = myPopup.runModal()
-        if res == NSAlertFirstButtonReturn {
-            return true
-        }
-        return false
-    }
-    
 }

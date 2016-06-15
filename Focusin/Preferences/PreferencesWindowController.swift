@@ -28,6 +28,14 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     var closedWithButton: Bool = false
     let seconds: Int = 60
     
+    let errorTitle = "Invalid value"
+    let buttonTitle = "Ok"
+    
+    let MIN_TIME = 1
+    let MAX_TIME = 500
+    let MIN_TARGET = 1
+    let MAX_TARGET = 99
+    
     override func windowDidLoad() {
         super.windowDidLoad()
         self.window?.center()
@@ -50,21 +58,21 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     @IBAction func savePreferences(sender: AnyObject) {
         closedWithButton = true
         
-        defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: Defaults.pomodoroKey)
-        defaults.setValue(breakDuration.integerValue * seconds, forKey: Defaults.breakKey)
-        defaults.setValue(targetPomodoros.integerValue, forKey: Defaults.targetKey)
-        defaults.setValue(showNotifications.state, forKey: Defaults.showNotificationsKey)
-        defaults.setValue(showTimeInBar.state, forKey: Defaults.showTimeKey)
+        if(pomodoroDuration.integerValue < MIN_TIME || pomodoroDuration.integerValue > MAX_TIME) {
+            dialogError("Pomodoro duration must be between 1 - 500")
+        } else if(breakDuration.integerValue < MIN_TIME || breakDuration.integerValue > MAX_TIME) {
+            dialogError("Break duration must be between 1 - 500")
+        } else if(targetPomodoros.integerValue < MIN_TARGET || targetPomodoros.integerValue > MAX_TARGET) {
+            dialogError("Target pomodoros must be between 1 - 99")
+        } else {
+            defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: Defaults.pomodoroKey)
+            defaults.setValue(breakDuration.integerValue * seconds, forKey: Defaults.breakKey)
+            defaults.setValue(targetPomodoros.integerValue, forKey: Defaults.targetKey)
+            defaults.setValue(showNotifications.state, forKey: Defaults.showNotificationsKey)
+            defaults.setValue(showTimeInBar.state, forKey: Defaults.showTimeKey)
 
-        closeAndSave()
-        self.window?.close()
-    }
-    
-    /* Save changes before close the window (this is performed only in case of close with default close button) */
-    func windowWillClose(notification: NSNotification) {
-        if(!closedWithButton) {
-            savePreferences(self)
             closeAndSave()
+            self.window?.close()
         }
     }
     
@@ -72,5 +80,20 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     func closeAndSave() {
         delegate?.preferencesDidUpdate()
     }
+    
+    /* Show an alert to the user */
+    func dialogError(text: String) -> Bool {
+        let myPopup: NSAlert = NSAlert()
+        myPopup.messageText = errorTitle
+        myPopup.informativeText = text
+        myPopup.alertStyle = NSAlertStyle.WarningAlertStyle
+        myPopup.addButtonWithTitle(buttonTitle)
+        let res = myPopup.runModal()
+        if res == NSAlertFirstButtonReturn {
+            return true
+        }
+        return false
+    }
+
 
 }
