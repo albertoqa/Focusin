@@ -35,6 +35,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     var showTimeInBar: Bool = true
     var showNotifications: Bool = true
     
+    var targetPomodoros: Int = 0
+    var longBreakAfterXPomodoros: Int = 0
+    
     var preferencesWindow: PreferencesWindowController!
     var aboutWindow: AboutWindowController!
     var notificationsHandler: NotificationsHandler!
@@ -83,9 +86,11 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         
         circleAnimations = CircleAnimation(popoverRootView: mainView, startButton: startButton, fullPomodoros: fullPomodoros, shortBreak: shortBreak, longBreak: longBreak)
         
-        timer = Timer(defaults.integerForKey(Defaults.pomodoroKey), defaults.integerForKey(Defaults.breakKey))
+        timer = Timer(defaults.integerForKey(Defaults.pomodoroKey), defaults.integerForKey(Defaults.shortBreakKey), defaults.integerForKey(Defaults.longBreakKey))
         showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
         showNotifications = defaults.integerForKey(Defaults.showNotificationsKey) == NSOnState
+        targetPomodoros = defaults.integerForKey(Defaults.targetKey)
+        longBreakAfterXPomodoros = defaults.integerForKey(Defaults.longBreakAfterXPomodoros)
         resetForPomodoro()
     
         resetButton.hidden = true
@@ -111,7 +116,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Reset the view elements and get them ready for a break */
     func resetForBreak() {
-        let breakDefaultDuration = defaults.integerForKey(Defaults.breakKey)
+        let breakDefaultDuration: Int
+        if(isLongBreak()) {
+            breakDefaultDuration = defaults.integerForKey(Defaults.longBreakKey)
+        } else {
+            breakDefaultDuration = defaults.integerForKey(Defaults.shortBreakKey)
+        }
         timeLabel.stringValue = String(format: timeFormat, breakDefaultDuration/seconds, breakDefaultDuration%seconds)
         timeLabel.textColor = green
         circleAnimations.setTimeLayerColor(false)
@@ -148,15 +158,20 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             reloadPreferences()
         }
         
+        if(timer.finishedPomodoros >= targetPomodoros) {
+            timer.finishedPomodoros = 0
+            fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + String(targetPomodoros)
+        }
+        
         isActive = false
         isPomodoro = true
-        timer.resetTimer(isPomodoro)
+        timer.resetTimer(isPomodoro, isLongBreak: isLongBreak())
         updateStatusTimer.invalidate()
         resetForPomodoro()
         
         circleAnimations.resetLayer(Circles.TIME)
         circleAnimations.pauseLayer(Circles.TIME)
-        circleAnimations.addTimeLeftAnimation(isPomodoro)
+        circleAnimations.addTimeLeftAnimation(isPomodoro, isLongBreak: isLongBreak())
     }
     
     /* Start the timer (if paused or stoped) or pause the timer (if active) */
@@ -186,7 +201,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                 shortBreak.image = NSImage(named: sofaFill)
             }
             isActive = true
-            if(timer.unPause(isPomodoro)) {
+            if(timer.unPause(isPomodoro, isLongBreak: isLongBreak())) {
                 circleAnimations.resumeLayer(Circles.TIME)
             } else {
                 circleAnimations.restartLayer(Circles.TIME)
@@ -197,10 +212,15 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         }
     }
     
+    /* Check if the break is short or long */
+    func isLongBreak() -> Bool {
+        return timer.finishedPomodoros % longBreakAfterXPomodoros == 0
+    }
+    
     /* Start a new timer and restart the animation */
     func startTimer() {
         startPauseTimer(self)
-        circleAnimations.addTimeLeftAnimation(isPomodoro)
+        circleAnimations.addTimeLeftAnimation(isPomodoro, isLongBreak: isLongBreak())
     }
     
     /* Update the current state of the application. Warn the user when the pomodoro or break finish and ask for the next action*/
@@ -219,19 +239,19 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             
             circleAnimations.pauseLayer(Circles.TARGET)
             
-            fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + defaults.stringForKey(Defaults.targetKey)!
+            fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + String(targetPomodoros)
             
-            if(timer.finishedPomodoros >= defaults.integerForKey(Defaults.targetKey)) {
-                isPomodoro = true
+            if(timer.finishedPomodoros == targetPomodoros && isPomodoro) {
+                isPomodoro = false
                 notificationsHandler.caller = Caller.TARGET
-                resetTimer(self)
+                resetTimerForBreak()
+
                 if(showNotifications) {
                     notificationsHandler.showNotification("Target achieved!",
-                                 text: "Do you want to start over?",
+                                 text: "Do you want to start the long break?",
                                  actionTitle: "Yes",
                                  otherTitle: "Cancel")
                 }
-                timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
                 notificationsHandler.caller = Caller.POMODORO
                 isPomodoro = false
@@ -252,9 +272,12 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                                  text: "Do you want to start a new pomodoro?",
                                  actionTitle: "New Pomodoro", otherTitle: "Cancel")
                 }
+                if(timer.finishedPomodoros >= targetPomodoros) {
+                    timer.finishedPomodoros = 0
+                }
             }
             
-            fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + defaults.stringForKey(Defaults.targetKey)!
+            fullPomodoros.stringValue = String(timer.finishedPomodoros) + slash + String(targetPomodoros)
         }
     }
     
@@ -264,14 +287,14 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             reloadPreferences()
         }
         
-        timer.resetTimer(isPomodoro)
+        timer.resetTimer(isPomodoro, isLongBreak: isLongBreak())
         isActive = false
         updateStatusTimer.invalidate()
         resetForBreak()
         
         circleAnimations.resetLayer(Circles.TIME)
         circleAnimations.pauseLayer(Circles.TIME)
-        circleAnimations.addTimeLeftAnimation(isPomodoro)
+        circleAnimations.addTimeLeftAnimation(isPomodoro, isLongBreak: isLongBreak())
     }
     
     /* Handle the action to perform when the user interact with a notification using the action button */
@@ -326,7 +349,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     func resetFullPomodoros() {
         circleAnimations.resetLayer(Circles.TARGET)
         timer.finishedPomodoros = 0
-        fullPomodoros.stringValue = zeroPomodoros + defaults.stringForKey(Defaults.targetKey)!
+        fullPomodoros.stringValue = zeroPomodoros + String(targetPomodoros)
     }
     
     /* Open a new window with the preferences of the application */
@@ -348,8 +371,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     func reloadPreferences() {
         reloadPreferencesOnNextPomodoro = false
         timer.pomodoroDuration = defaults.integerForKey(Defaults.pomodoroKey)
-        timer.breakDuration = defaults.integerForKey(Defaults.breakKey)
+        timer.shortBreakDuration = defaults.integerForKey(Defaults.shortBreakKey)
+        timer.longBreakDuration = defaults.integerForKey(Defaults.longBreakKey)
         timer.timeLeft = timer.pomodoroDuration
+        targetPomodoros = defaults.integerForKey(Defaults.targetKey)
         self.showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
         self.showNotifications = defaults.integerForKey(Defaults.showNotificationsKey) == NSOnState
         resetTimer(self)

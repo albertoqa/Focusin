@@ -185,18 +185,19 @@ public class CircleAnimation {
 
     
     /* Add a new animation for the time left. Remove previous animation before add the new one. */
-    func addTimeLeftAnimation(isPomodoro: Bool) {
+    func addTimeLeftAnimation(isPomodoro: Bool, isLongBreak: Bool) {
         if(timeLeftShapeLayer.animationForKey("timeLeft") != nil) {
             timeLeftShapeLayer.removeAnimationForKey("timeLeft")
         }
         
         if(isPomodoro) {
             strokeTimeIt.duration = defaults.doubleForKey(Defaults.pomodoroKey)+1
-            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        } else if(isLongBreak) {
+            strokeTimeIt.duration = defaults.doubleForKey(Defaults.longBreakKey)+1
         } else {
-            strokeTimeIt.duration = defaults.doubleForKey(Defaults.breakKey)+1
-            timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+            strokeTimeIt.duration = defaults.doubleForKey(Defaults.shortBreakKey)+1
         }
+        timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
     }
     
 }

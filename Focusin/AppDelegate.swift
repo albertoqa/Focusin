@@ -25,17 +25,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(notification: NSNotification) {
         
         let defaultPomodoroDuration = 25 * 60
-        let defaultBreakDuration = 5 * 60
-        let defaultTargetPomodoros = 10
+        let defaultLongBreakDuration = 15 * 5
+        let defaultShortBreakDuration = 5 * 60
+        let defaultTargetPomodoros = 8
+        let defaultLongBreakAfterXPomodoros = 4
         
         NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.pomodoroKey)
-        NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.breakKey)
+        NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.shortBreakKey)
+        NSUserDefaults.standardUserDefaults().setInteger(5, forKey: Defaults.longBreakKey)
+        NSUserDefaults.standardUserDefaults().setInteger(2, forKey: Defaults.longBreakAfterXPomodoros)
         NSUserDefaults.standardUserDefaults().setInteger(4, forKey: Defaults.targetKey)
 
         /* On first time launch set the default values */
         if(NSUserDefaults.standardUserDefaults().stringForKey(Defaults.pomodoroKey) == nil) {
             NSUserDefaults.standardUserDefaults().setInteger(defaultPomodoroDuration, forKey: Defaults.pomodoroKey)
-            NSUserDefaults.standardUserDefaults().setInteger(defaultBreakDuration, forKey: Defaults.breakKey)
+            NSUserDefaults.standardUserDefaults().setInteger(defaultLongBreakDuration, forKey: Defaults.longBreakKey)
+            NSUserDefaults.standardUserDefaults().setInteger(defaultShortBreakDuration, forKey: Defaults.shortBreakKey)
+            NSUserDefaults.standardUserDefaults().setInteger(defaultLongBreakAfterXPomodoros, forKey: Defaults.longBreakAfterXPomodoros)
             NSUserDefaults.standardUserDefaults().setInteger(defaultTargetPomodoros, forKey: Defaults.targetKey)
             NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showTimeKey)
             NSUserDefaults.standardUserDefaults().setInteger(NSOnState, forKey: Defaults.showNotificationsKey)

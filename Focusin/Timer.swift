@@ -12,7 +12,8 @@ class Timer: NSObject {
     
     let timeInterval = 1.0
     var pomodoroDuration: Int = 0   // total duration of a pomodoro
-    var breakDuration: Int = 0      // total duration of a break
+    var shortBreakDuration: Int = 0      // total duration of a short break
+    var longBreakDuration: Int = 0      // total duration of a long break
     
     var timer: NSTimer = NSTimer()
     
@@ -22,10 +23,11 @@ class Timer: NSObject {
     var finishedPomodoros: Int = 0  // number of pomodoros completed
     
     /* Init a new timer with a given pomodoro and break duration */
-    init(_ pomodoroDuration: Int, _ breakDuration: Int) {
+    init(_ pomodoroDuration: Int, _ shortBreakDuration: Int, _ longBreakDuration: Int) {
         super.init()
         self.pomodoroDuration = pomodoroDuration
-        self.breakDuration = breakDuration
+        self.shortBreakDuration = shortBreakDuration
+        self.longBreakDuration = longBreakDuration
         self.timeLeft = pomodoroDuration
     }
     
@@ -54,21 +56,30 @@ class Timer: NSObject {
         startTimer()
     }
     
-    /* Start the break timer */
-    func startBreakTimer() {
+    /* Start the short break timer */
+    func startShortBreakTimer() {
         isPomodoro = false
-        timeLeft = breakDuration
+        timeLeft = shortBreakDuration
+        startTimer()
+    }
+    
+    /* Start the long break timer */
+    func startLongBreakTimer() {
+        isPomodoro = false
+        timeLeft = longBreakDuration
         startTimer()
     }
     
     /* Unpause the currently running timer or if timeLeft is 0, restart it */
     // TODO if pause exactly when the timeLeft is 0 and press play again, the pomodoro starts over... and it should not do that!
-    func unPause(isPomodoro: Bool) -> Bool {
+    func unPause(isPomodoro: Bool, isLongBreak: Bool) -> Bool {
         if(timeLeft == 0) {
             if(isPomodoro) {
                 startPomodoroTimer()
+            } else if(isLongBreak) {
+                startLongBreakTimer()
             } else {
-                startBreakTimer()
+                startShortBreakTimer()
             }
             return false
         } else {
@@ -83,15 +94,18 @@ class Timer: NSObject {
     }
     
     /* Stop the current timer and reset the pomodoro timer (no break timer) */
-    func resetTimer(isPomodoro: Bool) {
+    func resetTimer(isPomodoro: Bool, isLongBreak: Bool) {
         if(self.timer.valid) {
             self.timer.invalidate()
         }
         if(isPomodoro) {
             timeLeft = pomodoroDuration
             self.isPomodoro = true
+        } else if(isLongBreak) {
+            timeLeft = longBreakDuration
+            self.isPomodoro = false
         } else {
-            timeLeft = breakDuration
+            timeLeft = shortBreakDuration
             self.isPomodoro = false
         }
     }

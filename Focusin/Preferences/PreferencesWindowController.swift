@@ -21,12 +21,14 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     let defaults = NSUserDefaults.standardUserDefaults()
 
     @IBOutlet weak var pomodoroDuration: NSTextField!
-    @IBOutlet weak var breakDuration: NSTextField!
+    @IBOutlet weak var shortBreakDuration: NSTextField!
+    @IBOutlet weak var longBreakAfterXPomodoros: NSTextField!
     @IBOutlet weak var targetPomodoros: NSTextField!
     @IBOutlet weak var showNotifications: NSButton!
     @IBOutlet weak var showTimeInBar: NSButton!
     @IBOutlet weak var startAtLogin: NSButton!
     
+    @IBOutlet weak var longBreadDuration: NSTextField!
     var closedWithButton: Bool = false
     let seconds: Int = 60
     
@@ -35,6 +37,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     let errorPomodoro = "Pomodoro duration must be between 1 - 500"
     let errorBreak = "Break duration must be between 1 - 500"
     let errorTarget = "Target pomodoros must be between 1 - 99"
+    let errorLongBreak = "Long break must be set between 1 - 99"
     
     let MIN_TIME = 1
     let MAX_TIME = 500
@@ -49,8 +52,10 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         
         /* Load preferred settings */
         pomodoroDuration.integerValue = defaults.integerForKey(Defaults.pomodoroKey)/seconds
-        breakDuration.integerValue = defaults.integerForKey(Defaults.breakKey)/seconds
+        shortBreakDuration.integerValue = defaults.integerForKey(Defaults.shortBreakKey)/seconds
+        longBreadDuration.integerValue = defaults.integerForKey(Defaults.longBreakKey)/seconds
         targetPomodoros.integerValue = defaults.integerForKey(Defaults.targetKey)
+        longBreakAfterXPomodoros.integerValue = defaults.integerForKey(Defaults.longBreakAfterXPomodoros)
         showNotifications.state = defaults.integerForKey(Defaults.showNotificationsKey)
         showTimeInBar.integerValue = defaults.integerForKey(Defaults.showTimeKey)
         startAtLogin.integerValue = defaults.integerForKey(Defaults.startAtLogin)
@@ -66,13 +71,19 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         
         if(pomodoroDuration.integerValue < MIN_TIME || pomodoroDuration.integerValue > MAX_TIME) {
             dialogError(errorPomodoro)
-        } else if(breakDuration.integerValue < MIN_TIME || breakDuration.integerValue > MAX_TIME) {
+        } else if(shortBreakDuration.integerValue < MIN_TIME || shortBreakDuration.integerValue > MAX_TIME) {
+            dialogError(errorBreak)
+        } else if(longBreadDuration.integerValue < MIN_TIME || longBreadDuration.integerValue > MAX_TIME) {
             dialogError(errorBreak)
         } else if(targetPomodoros.integerValue < MIN_TARGET || targetPomodoros.integerValue > MAX_TARGET) {
             dialogError(errorTarget)
+        } else if(longBreakAfterXPomodoros.integerValue < MIN_TARGET || longBreakAfterXPomodoros.integerValue > MAX_TARGET) {
+            dialogError(errorLongBreak)
         } else {
             defaults.setValue(pomodoroDuration.integerValue * seconds, forKey: Defaults.pomodoroKey)
-            defaults.setValue(breakDuration.integerValue * seconds, forKey: Defaults.breakKey)
+            defaults.setValue(shortBreakDuration.integerValue * seconds, forKey: Defaults.shortBreakKey)
+            defaults.setValue(longBreadDuration.integerValue * seconds, forKey: Defaults.longBreakKey)
+            defaults.setValue(longBreakAfterXPomodoros.integerValue, forKey: Defaults.longBreakAfterXPomodoros)
             defaults.setValue(targetPomodoros.integerValue, forKey: Defaults.targetKey)
             defaults.setValue(showNotifications.state, forKey: Defaults.showNotificationsKey)
             defaults.setValue(showTimeInBar.state, forKey: Defaults.showTimeKey)
