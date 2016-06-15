@@ -63,9 +63,13 @@ class Timer: NSObject {
     
     /* Unpause the currently running timer or if timeLeft is 0, restart it */
     // TODO if pause exactly when the timeLeft is 0 and press play again, the pomodoro starts over... and it should not do that!
-    func unPause() -> Bool {
+    func unPause(isPomodoro: Bool) -> Bool {
         if(timeLeft == 0) {
-            startPomodoroTimer()
+            if(isPomodoro) {
+                startPomodoroTimer()
+            } else {
+                startBreakTimer()
+            }
             return false
         } else {
             startTimer()
@@ -79,12 +83,17 @@ class Timer: NSObject {
     }
     
     /* Stop the current timer and reset the pomodoro timer (no break timer) */
-    func resetTimer() {
+    func resetTimer(isPomodoro: Bool) {
         if(self.timer.valid) {
             self.timer.invalidate()
         }
-        timeLeft = pomodoroDuration
-        isPomodoro = true
+        if(isPomodoro) {
+            timeLeft = pomodoroDuration
+            self.isPomodoro = true
+        } else {
+            timeLeft = breakDuration
+            self.isPomodoro = false
+        }
     }
     
     /* Stop the current timer */

@@ -24,6 +24,10 @@ class PopoverRootView: NSView {
         super.drawRect(dirtyRect)
     }
     
+    override func mouseDown(theEvent: NSEvent) {
+        super.mouseDown(theEvent)
+    }
+    
 }
 
 /* Allow to change the background color of the popover view */

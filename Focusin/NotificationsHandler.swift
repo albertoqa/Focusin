@@ -13,6 +13,7 @@ import Cocoa
 protocol NotificationsDelegate {
     func handleNotificationAction(caller: Caller)
     func handleNotificationOther(caller: Caller)
+    func handleNotificationOpenApp()
 }
 
 /* Who is invoking the notification? The point of the application who create the notification. */
@@ -36,7 +37,9 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     /* Detect if the user interact with the notification - real action button */
     public func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
         if(notification.activationType == NSUserNotificationActivationType.ActionButtonClicked) {
-            self.handleNotifications(notification, isActionButton: true)
+            self.handleNotifications(notification, isActionButton: true, openApp: false)
+        } else {
+            self.handleNotifications(notification, isActionButton: true, openApp: true)
         }
     }
     
@@ -60,9 +63,15 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
                 }
             }
             dispatch_async(dispatch_get_main_queue()) {
-                self.handleNotifications(notification, isActionButton: false)
+                self.handleNotifications(notification, isActionButton: false, openApp: false)
             }
         }
+    }
+    
+    /* Clear all notifications from the app */
+    func removeAllNotifications() {
+        actionButtonPressed = true  // this is set so the notification is not handled
+        NSUserNotificationCenter.defaultUserNotificationCenter().removeAllDeliveredNotifications()
     }
     
     /* Show a new notification on the Notification Center */
@@ -77,10 +86,13 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     }
     
     /* Handle the notifications */
-    func handleNotifications(notification: NSUserNotification, isActionButton: Bool) {
-        if(isActionButton) {
+    func handleNotifications(notification: NSUserNotification, isActionButton: Bool, openApp: Bool) {
+        if(isActionButton && !openApp) {
             actionButtonPressed = true
             handleNotificationAction(caller)
+        } else if(openApp) {
+            handleNotificationOpenApp()
+            removeAllNotifications()
         } else if(!actionButtonPressed) {
             actionButtonPressed = false
             handleNotificationOther(caller)
@@ -97,6 +109,11 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     /* Notification action: other action */
     func handleNotificationOther(caller: Caller) {
         delegate?.handleNotificationOther(caller)
+    }
+    
+    /* Close the notification and open the app */
+    func handleNotificationOpenApp() {
+        delegate?.handleNotificationOpenApp()
     }
     
 }

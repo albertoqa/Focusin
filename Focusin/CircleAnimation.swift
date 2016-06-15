@@ -37,6 +37,11 @@ public class CircleAnimation {
     let strokeStartValue: Double = 0.0
     let strokeToValue: Double = 1.0
     
+    let orangeFull = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
+    let orangeAplha = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
+    let greenFull = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1).CGColor
+    let greenAlpha = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:0.5).CGColor
+    
     // startButton is the position of the Time Circle, fullPomodoros is the position of the Target circle
     init(popoverRootView: PopoverRootView, startButton: NSButton, fullPomodoros: NSTextField) {
         self.mainView = popoverRootView
@@ -74,7 +79,7 @@ public class CircleAnimation {
         bez.appendBezierPathWithArcWithCenter(center, radius:
             radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         layer.path = bez.CGPath(forceClose: false)
-        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
+        layer.strokeColor = orangeAplha
         layer.fillColor = NSColor.clearColor().CGColor
         layer.lineWidth = lineWidth
         mainView.wantsLayer = true
@@ -87,7 +92,7 @@ public class CircleAnimation {
         bez.appendBezierPathWithArcWithCenter(center, radius:
             radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         layer.path = bez.CGPath(forceClose: false)
-        layer.strokeColor = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
+        layer.strokeColor = orangeFull
         layer.fillColor = NSColor.clearColor().CGColor
         layer.lineWidth = lineWidth
         mainView.layer!.addSublayer(layer)
@@ -124,6 +129,17 @@ public class CircleAnimation {
     func restartLayer(circle: Circles) {
         resetLayer(circle)
         resumeLayer(circle)
+    }
+    
+    /* Set the color of the circle and the animation */
+    func setTimeLayerColor(isPomodoro: Bool) {
+        if(isPomodoro) {
+            timeLeftShapeLayer.strokeColor = orangeFull
+            bgTimeLeftShapeLayer.strokeColor = orangeAplha
+        } else {
+            timeLeftShapeLayer.strokeColor = greenFull
+            bgTimeLeftShapeLayer.strokeColor = greenAlpha
+        }
     }
     
     /*func resetLastPomodoro() {

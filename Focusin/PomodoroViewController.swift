@@ -12,6 +12,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     @IBOutlet var mainView: PopoverRootView!
     var buttonBar: NSStatusBarButton
+    var popoverView: NSPopover
     
     @IBOutlet weak var startButton: NSButton!
     @IBOutlet weak var resetButton: NSButton!
@@ -51,8 +52,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     let iconPlay = "play-2"
     let iconPause = "pause-2"
     
-    init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton) {
+    init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton, popover: NSPopover) {
         self.buttonBar = button
+        self.popoverView = popover
         super.init(nibName: nibName, bundle: bundle)!
     }
     
@@ -75,7 +77,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         timer = Timer(defaults.integerForKey(Defaults.pomodoroKey), defaults.integerForKey(Defaults.breakKey))
         showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
         showNotifications = defaults.integerForKey(Defaults.showNotificationsKey) == NSOnState
-        reset()
+        resetForPomodoro()
     
         resetButton.hidden = true
         removeTaskButton.hidden = true
@@ -84,12 +86,26 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         currentTask.placeholderAttributedString = NSAttributedString(string: currentTaskLabel, attributes: [NSForegroundColorAttributeName: gray, NSFontAttributeName : NSFont(name: font, size: currentTaskSize)!])
     }
     
-    /* Set the timer label to the user preferred pomodoro duration, stop the current timer, hide reset button,
-     set start button to play. Reset the elements of the view */
-    func reset() {
+    /* Reset the view elements and get them ready for a new pomodoro */
+    func resetForPomodoro() {
         let pomodoroDefaultDuration = defaults.integerForKey(Defaults.pomodoroKey)
         timeLabel.stringValue = String(format: timeFormat, pomodoroDefaultDuration/seconds, pomodoroDefaultDuration%seconds)
         timeLabel.textColor = orange
+        circleAnimations.setTimeLayerColor(true)
+        reset()
+    }
+    
+    /* Reset the view elements and get them ready for a break */
+    func resetForBreak() {
+        let breakDefaultDuration = defaults.integerForKey(Defaults.breakKey)
+        timeLabel.stringValue = String(format: timeFormat, breakDefaultDuration/seconds, breakDefaultDuration%seconds)
+        timeLabel.textColor = green
+        circleAnimations.setTimeLayerColor(false)
+        reset()
+    }
+    
+    /* Common elements of the reset */
+    func reset() {
         buttonBar.title = showTimeInBar ? timeLabel.stringValue : ""
         resetButton.hidden = true
         startButton.image = NSImage(named: iconPlay)
@@ -97,15 +113,17 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Stop the current timer and reset all the values. */
     @IBAction func resetTimer(sender: AnyObject) {
+        notificationsHandler.removeAllNotifications()
+        
         if(reloadPreferencesOnNextPomodoro) {
             reloadPreferences()
         }
         
-        timer.resetTimer()
         isActive = false
         isPomodoro = true
+        timer.resetTimer(isPomodoro)
         updateStatusTimer.invalidate()
-        reset()
+        resetForPomodoro()
         
         circleAnimations.resetLayer(Circles.TIME)
         circleAnimations.pauseLayer(Circles.TIME)
@@ -113,7 +131,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     }
     
     /* Start the timer (if paused or stoped) or pause the timer (if active) */
-    @IBAction func startPauseTimer(sender: NSButton) {
+    @IBAction func startPauseTimer(sender: AnyObject) {
+        notificationsHandler.removeAllNotifications()
+
         resetButton.hidden = false
         if(isActive) {
             isActive = false
@@ -128,7 +148,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             }
             startButton.image = NSImage(named: iconPause)
             isActive = true
-            if(timer.unPause()) {
+            if(timer.unPause(isPomodoro)) {
                 circleAnimations.resumeLayer(Circles.TIME)
             } else {
                 circleAnimations.restartLayer(Circles.TIME)
@@ -141,20 +161,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Start a new timer and restart the animation */
     func startTimer() {
-        if(!updateStatusTimer.valid) {
-            updateStatusTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(updateCurrentStatus), userInfo: nil, repeats: true)
-        }
-        circleAnimations.restartLayer(Circles.TIME)
-        //resetLastPomodoro()
-        
-        if(isPomodoro) {
-            circleAnimations.resumeLayer(Circles.TARGET)
-            timeLabel.textColor = orange
-            timer.startPomodoroTimer()
-        } else {
-            timeLabel.textColor = green
-            timer.startBreakTimer()
-        }
+        startPauseTimer(self)
         circleAnimations.addTimeLeftAnimation(isPomodoro)
     }
     
@@ -179,6 +186,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             if(timer.finishedPomodoros >= defaults.integerForKey(Defaults.targetKey)) {
                 isPomodoro = true
                 notificationsHandler.caller = Caller.TARGET
+                resetTimer(self)
                 if(showNotifications) {
                     notificationsHandler.showNotification("Target achieved!",
                                  text: "Do you want to start over?",
@@ -188,6 +196,9 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                 timer.finishedPomodoros = 0
             } else if(timer.isPomodoro) {
                 notificationsHandler.caller = Caller.POMODORO
+                isPomodoro = false
+                resetTimerForBreak()
+                
                 if(showNotifications) {
                     notificationsHandler.showNotification("Pomodoro completed!",
                                  text: "Do you want to start the break?",
@@ -196,6 +207,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                 }
             } else {
                 notificationsHandler.caller = Caller.BREAK
+                isPomodoro = true
+                resetTimer(self)
                 if(showNotifications) {
                     notificationsHandler.showNotification("Break finished!",
                                  text: "Do you want to start a new pomodoro?",
@@ -207,6 +220,21 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         }
     }
     
+    func resetTimerForBreak() {
+        if(reloadPreferencesOnNextPomodoro) {
+            reloadPreferences()
+        }
+        
+        timer.resetTimer(isPomodoro)
+        isActive = false
+        updateStatusTimer.invalidate()
+        resetForBreak()
+        
+        circleAnimations.resetLayer(Circles.TIME)
+        circleAnimations.pauseLayer(Circles.TIME)
+        circleAnimations.addTimeLeftAnimation(isPomodoro)
+    }
+    
     /* Handle the action to perform when the user interact with a notification using the action button */
     func handleNotificationAction(caller: Caller) {
         if(caller == Caller.TARGET) {
@@ -215,27 +243,28 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             isPomodoro = false
             startTimer()
         } else if(caller == Caller.BREAK) {
-            isPomodoro = true
             startTimer()
         }
     }
     
     /* Handle the action to perform when the user interact with a notification using the other (close) button */
     func handleNotificationOther(caller: Caller) {
-        if(caller == Caller.TARGET) {
-            resetTimer(self)
-        } else if(caller == Caller.POMODORO) {
+        if(caller == Caller.POMODORO) {
             isPomodoro = true
             startTimer()  // start pomodoro
-        } else if(caller == Caller.BREAK) {
-            // stop timer and wait for user action
-            isPomodoro = true
-            resetTimer(self)
         }
+    }
+    
+    /* Handle the notification action: open the popover view of the app */
+    func handleNotificationOpenApp() {
+        NSApp.activateIgnoringOtherApps(true)
+        popoverView.showRelativeToRect(buttonBar.bounds, ofView: buttonBar, preferredEdge: NSRectEdge.MinY)
     }
     
     /* Open a contextual menu with the possible actions: settings, about and quit */
     @IBAction func openSettingsMenu(sender: NSButton) {
+        notificationsHandler.removeAllNotifications()
+
         let menu = NSMenu()
 
         menu.insertItemWithTitle("Reset Full Pomodoros", action: #selector(PomodoroViewController.resetFullPomodoros),
@@ -299,6 +328,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Save the current text and lose focus on the NSTextFiel */
     @IBAction func enterTask(sender: NSTextField) {
+        notificationsHandler.removeAllNotifications()
+
         sender.resignFirstResponder()
         sender.selectable = false
         if(!sender.stringValue.isEmpty) {
@@ -310,6 +341,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Focus on the NSTextFiel and clear the text */
     @IBAction func removeTask(sender: NSButton) {
+        notificationsHandler.removeAllNotifications()
+
         currentTask.stringValue = ""
         currentTask.editable = true
         currentTask.becomeFirstResponder()

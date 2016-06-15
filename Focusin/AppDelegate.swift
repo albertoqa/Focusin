@@ -28,7 +28,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let defaultBreakDuration = 5 * 60
         let defaultTargetPomodoros = 10
         
-        //NSUserDefaults.standardUserDefaults().setInteger(6, forKey: Defaults.pomodoroKey)
+        NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.pomodoroKey)
+        NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.breakKey)
+        NSUserDefaults.standardUserDefaults().setInteger(4, forKey: Defaults.targetKey)
 
         /* On first time launch set the default values */
         if(NSUserDefaults.standardUserDefaults().stringForKey(Defaults.pomodoroKey) == nil) {
@@ -69,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button!.title = String(format: timeFormat, pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
         }
 
-        popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil, button: button!)
+        popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil, button: button!, popover: popover)
         
         eventMonitor = EventMonitor(mask: .LeftMouseDownMask) { [unowned self] event in
             if self.popover.shown {
