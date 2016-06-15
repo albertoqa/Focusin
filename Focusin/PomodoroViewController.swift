@@ -134,6 +134,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     
     /* Show the todo list of tasks */
     @IBAction func showToDoList(sender: AnyObject) {
+        popoverView.contentViewController = TasksViewController(nibName: "TasksViewController", bundle: nil, popover: popoverView, pomodoroView: self)
     }
     
     

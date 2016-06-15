@@ -13,10 +13,12 @@ class PopoverRootView: NSView {
 
     override func viewDidMoveToWindow() {
         self.wantsLayer = true
-        let aFrameView = self.window?.contentView?.superview
-        let a = PopoverBackgroundView(frame: aFrameView!.bounds)
-        a.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
-        aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.Below, relativeTo: aFrameView)
+        if(self.window != nil) {
+            let aFrameView = self.window?.contentView?.superview
+            let a = PopoverBackgroundView(frame: aFrameView!.bounds)
+            a.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
+            aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.Below, relativeTo: aFrameView)
+        }
         super.viewDidMoveToWindow()
     }
     
