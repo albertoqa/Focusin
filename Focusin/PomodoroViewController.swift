@@ -22,6 +22,10 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     @IBOutlet weak var currentTask: NSTextField!
     @IBOutlet weak var removeTaskButton: NSButton!
     
+    @IBOutlet weak var shortBreak: NSButton!
+    @IBOutlet weak var longBreak: NSButton!
+    @IBOutlet weak var backgroundButtons: NSTextField!
+    
     let defaults = NSUserDefaults.standardUserDefaults()
     var timer: Timer!
     var isActive: Bool = false
@@ -53,6 +57,8 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
     let iconPauseOrange = "pause-2"
     let iconPlayGreen = "play-3"
     let iconPauseGreen = "pause-3"
+    let sofa = "sofa"
+    let sofaFill = "sofa_filled"
     
     init(nibName: String, bundle: NSBundle?, button: NSStatusBarButton, popover: NSPopover) {
         self.buttonBar = button
@@ -74,7 +80,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         notificationsHandler = NotificationsHandler()
         notificationsHandler.delegate = self
         
-        circleAnimations = CircleAnimation(popoverRootView: mainView, startButton: startButton, fullPomodoros: fullPomodoros)
+        circleAnimations = CircleAnimation(popoverRootView: mainView, startButton: startButton, fullPomodoros: fullPomodoros, shortBreak: shortBreak, longBreak: longBreak)
         
         timer = Timer(defaults.integerForKey(Defaults.pomodoroKey), defaults.integerForKey(Defaults.breakKey))
         showTimeInBar = defaults.integerForKey(Defaults.showTimeKey) == NSOnState
@@ -86,6 +92,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         fullPomodoros.stringValue = zeroPomodoros + defaults.stringForKey(Defaults.targetKey)!
         
         currentTask.placeholderAttributedString = NSAttributedString(string: currentTaskLabel, attributes: [NSForegroundColorAttributeName: gray, NSFontAttributeName : NSFont(name: font, size: currentTaskSize)!])
+        
     }
     
     /* Reset the view elements and get them ready for a new pomodoro */
@@ -95,6 +102,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         timeLabel.textColor = orange
         circleAnimations.setTimeLayerColor(true)
         startButton.image = NSImage(named: iconPlayOrange)
+        shortBreak.image = NSImage(named: sofa)
         reset()
     }
     
@@ -105,6 +113,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         timeLabel.textColor = green
         circleAnimations.setTimeLayerColor(false)
         startButton.image = NSImage(named: iconPlayGreen)
+        shortBreak.image = NSImage(named: sofa)
         reset()
     }
     
@@ -113,6 +122,20 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         buttonBar.title = showTimeInBar ? timeLabel.stringValue : ""
         resetButton.hidden = true
     }
+    
+    /* Start a break */
+    @IBAction func startBreak(sender: AnyObject) {
+        if(!(!isPomodoro && isActive)) {
+            isPomodoro = false
+            resetTimerForBreak()
+            startTimer()
+        }
+    }
+    
+    /* Show the todo list of tasks */
+    @IBAction func showToDoList(sender: AnyObject) {
+    }
+    
     
     /* Stop the current timer and reset all the values. */
     @IBAction func resetTimer(sender: AnyObject) {
@@ -157,6 +180,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
                 startButton.image = NSImage(named: iconPauseOrange)
             } else {
                 startButton.image = NSImage(named: iconPauseGreen)
+                shortBreak.image = NSImage(named: sofaFill)
             }
             isActive = true
             if(timer.unPause(isPomodoro)) {
@@ -362,6 +386,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         currentTask.becomeFirstResponder()
         sender.hidden = true
     }
+
 }
 
 

@@ -32,6 +32,12 @@ public class CircleAnimation {
     let radiusSmall: CGFloat = 25
     let widthSmall: CGFloat = 2
     
+    // Short break circle
+    let shortBreakShapeLayer = CAShapeLayer()
+    
+    // Long break circle
+    let longBreakShapeLayer = CAShapeLayer()
+    
     let mainView: PopoverRootView   // pomodoro view
 
     let strokeStartValue: Double = 0.0
@@ -41,9 +47,10 @@ public class CircleAnimation {
     let orangeAplha = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
     let greenFull = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1).CGColor
     let greenAlpha = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:0.5).CGColor
+    let gray = NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1).CGColor
     
     // startButton is the position of the Time Circle, fullPomodoros is the position of the Target circle
-    init(popoverRootView: PopoverRootView, startButton: NSButton, fullPomodoros: NSTextField) {
+    init(popoverRootView: PopoverRootView, startButton: NSButton, fullPomodoros: NSTextField, shortBreak: NSButton, longBreak: NSButton) {
         self.mainView = popoverRootView
         
         // Animation circle for the current timer
@@ -71,6 +78,29 @@ public class CircleAnimation {
         strokeTargetIt.removedOnCompletion = false
         pauseLayer(Circles.TARGET)
         targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
+        
+        // Static circle for short break
+        drawCompleteCircleSpahe(shortBreakShapeLayer, center: CGPoint(x: shortBreak.frame.midX, y: shortBreak.frame.midY-3),
+                    radius: radiusSmall, lineWidth: widthSmall, color: greenFull)
+        
+        // Static circle for long break
+        drawCompleteCircleSpahe(longBreakShapeLayer, center: CGPoint(x: longBreak.frame.midX, y: longBreak.frame.midY),
+                                radius: radiusSmall, lineWidth: widthSmall, color: gray)
+
+    }
+    
+    /* Draw a complete static circle */
+    func drawCompleteCircleSpahe(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat, color: CGColor) {
+        let bez = NSBezierPath()
+        bez.appendBezierPathWithArcWithCenter(center, radius:
+            radius, startAngle: -90.degreesToRadians, endAngle: 360.degreesToRadians, clockwise: true)
+        layer.path = bez.CGPath(forceClose: false)
+        layer.strokeColor = color
+        layer.fillColor = NSColor.clearColor().CGColor
+        layer.lineWidth = lineWidth
+        mainView.wantsLayer = true
+        layer.zPosition = 1
+        mainView.layer!.addSublayer(layer)
     }
     
     /* Draw a cricle on the given layer */
@@ -83,6 +113,7 @@ public class CircleAnimation {
         layer.fillColor = NSColor.clearColor().CGColor
         layer.lineWidth = lineWidth
         mainView.wantsLayer = true
+        layer.zPosition = 1
         mainView.layer!.addSublayer(layer)
     }
     
@@ -95,6 +126,7 @@ public class CircleAnimation {
         layer.strokeColor = orangeFull
         layer.fillColor = NSColor.clearColor().CGColor
         layer.lineWidth = lineWidth
+        layer.zPosition = 1
         mainView.layer!.addSublayer(layer)
     }
     

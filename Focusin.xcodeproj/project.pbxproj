@@ -17,6 +17,8 @@
 		D338D4511D1141E900BB86C1 /* LauncherApplication.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = D338D4401D1140B600BB86C1 /* LauncherApplication.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D338D4531D11421500BB86C1 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D338D4521D11421500BB86C1 /* ServiceManagement.framework */; };
 		D338D4551D11422000BB86C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D338D4541D11422000BB86C1 /* Cocoa.framework */; };
+		D338D45A1D11AD7B00BB86C1 /* TasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */; };
+		D338D45B1D11AD7B00BB86C1 /* TasksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */; };
 		D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */; };
 		D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC01D1033C00069BC94 /* Assets.xcassets */; };
 		D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC21D1033C00069BC94 /* MainMenu.xib */; };
@@ -58,6 +60,8 @@
 		D338D44F1D1140E000BB86C1 /* LauncherApplication.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LauncherApplication.entitlements; sourceTree = "<group>"; };
 		D338D4521D11421500BB86C1 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		D338D4541D11422000BB86C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TasksViewController.swift; path = Tasks/TasksViewController.swift; sourceTree = "<group>"; };
+		D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TasksViewController.xib; path = Tasks/TasksViewController.xib; sourceTree = "<group>"; };
 		D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3ECECC01D1033C00069BC94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -116,6 +120,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		D338D4571D11AD5700BB86C1 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */,
+				D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */,
+			);
+			name = Task;
+			sourceTree = "<group>";
+		};
 		D3ECECB21D1033BF0069BC94 = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +152,7 @@
 		D3ECECBD1D1033BF0069BC94 /* Focusin */ = {
 			isa = PBXGroup;
 			children = (
+				D338D4571D11AD5700BB86C1 /* Task */,
 				D3ECECC01D1033C00069BC94 /* Assets.xcassets */,
 				D3ECECCB1D1034430069BC94 /* About */,
 				D3ECECD41D1034940069BC94 /* Preferences */,
@@ -281,6 +295,7 @@
 				D3ECECE11D1034F70069BC94 /* PomodoroViewController.xib in Resources */,
 				D3ECECD81D1034AC0069BC94 /* PreferencesWindowController.xib in Resources */,
 				D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */,
+				D338D45B1D11AD7B00BB86C1 /* TasksViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +317,7 @@
 			files = (
 				D3ECECD71D1034AC0069BC94 /* PreferencesWindowController.swift in Sources */,
 				D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */,
+				D338D45A1D11AD7B00BB86C1 /* TasksViewController.swift in Sources */,
 				D338D4371D10842900BB86C1 /* CircleAnimation.swift in Sources */,
 				D3ECECE31D1034F70069BC94 /* Timer.swift in Sources */,
 				D3ECECE21D1034F70069BC94 /* PopoverRootView.swift in Sources */,
