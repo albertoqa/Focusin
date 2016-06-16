@@ -1,6 +1,7 @@
 html, body {
 	height: 100%;
   font: 400 15px Lato-Light, sans-serif;
+  background-color: #f1f1f1;
 }
 
 h1 {
@@ -18,6 +19,21 @@ h2 {
   color: #ffffff;
   text-shadow: 1px 2px 3px rgba(0, 0, 0, .6);
   margin-bottom: 1em;
+}
+
+h3 {
+  font-size: 2.5em;
+  color: #555;
+  margin-top: 3em;
+  margin-bottom: 1em;
+  text-shadow: 1px 2px 3px rgba(255, 255, 255, .6);
+}
+
+p {
+  margin-left: 40px;
+  margin-right: 40px;
+  font-size: 1.5em;
+  color: #555;
 }
 
 .container-fluid {
@@ -66,4 +82,58 @@ h2 {
   border-color: #fff;
   background-color: #fff;
   color: #ED6A5A;
+}
+
+.circle {
+  font-family: Lato, sans-serif;
+  margin: 15px 15px 0px 15px;
+  display:inline-block;
+  width:80px;
+  height:80px;
+  border-radius:66px;
+  border:1px solid #444;
+  font-size:20px;
+  color:#666;
+  line-height:75px;
+  text-align:center;
+  text-decoration:none;
+  text-shadow:0 1px 0 #fff;
+  background:transparent;
+}
+
+.pomodoro {
+  color: #ED6A5A;
+  border:2.5px solid rgba(237, 106, 90, .6);
+}
+
+.break {
+  color: #9bc1bc;
+  border:2.5px solid rgba(155, 193, 188, .6);
+}
+
+.target {
+  color: #555;
+  border:2.5px solid rgba(85, 85, 85, .6);
+}
+
+.howTo {
+  font-family: Lato, sans-serif;
+  margin: 15px;
+  width:80px;
+  display:inline-block;
+  margin-bottom: 20px;
+}
+
+.work {
+  color: #ED6A5A;
+}
+.breakSL {
+  color: #9bc1bc;
+}
+.repeat {
+  color: #555;
+}
+
+#pom {
+  margin-top: 50px;
 }
