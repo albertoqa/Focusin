@@ -82,6 +82,7 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
         notification.soundName = NSUserNotificationDefaultSoundName
         notification.actionButtonTitle = actionTitle
         notification.otherButtonTitle = otherTitle
+        //notification.contentImage = NSImage(named: "goal")
         NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
     }
     

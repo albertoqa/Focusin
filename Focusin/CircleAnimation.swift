@@ -77,7 +77,7 @@ public class CircleAnimation {
         strokeTargetIt.duration = defaults.doubleForKey(Defaults.targetKey)*defaults.doubleForKey(Defaults.pomodoroKey)
         strokeTargetIt.removedOnCompletion = false
         pauseLayer(Circles.TARGET)
-        targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
+        //targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
         
         // Static circle for short break
         drawCompleteCircleSpahe(shortBreakShapeLayer, center: CGPoint(x: shortBreak.frame.midX, y: shortBreak.frame.midY-3),

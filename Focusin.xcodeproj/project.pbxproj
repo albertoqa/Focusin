@@ -62,7 +62,7 @@
 		D338D4541D11422000BB86C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TasksViewController.swift; path = Tasks/TasksViewController.swift; sourceTree = "<group>"; };
 		D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TasksViewController.xib; path = Tasks/TasksViewController.xib; sourceTree = "<group>"; };
-		D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3ECECBB1D1033BF0069BC94 /* Focusin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focusin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3ECECC01D1033C00069BC94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3ECECC31D1033C00069BC94 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 		D3ECECBC1D1033BF0069BC94 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */,
+				D3ECECBB1D1033BF0069BC94 /* Focusin.app */,
 				D338D4401D1140B600BB86C1 /* LauncherApplication.app */,
 			);
 			name = Products;
@@ -224,7 +224,7 @@
 			);
 			name = Pomodoro;
 			productName = Pomodoro;
-			productReference = D3ECECBB1D1033BF0069BC94 /* Pomodoro.app */;
+			productReference = D3ECECBB1D1033BF0069BC94 /* Focusin.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -477,8 +477,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Focusin/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertoquesada.Focusin;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Focusin;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
@@ -493,8 +494,9 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Focusin/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertoquesada.Focusin;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Focusin;
 				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
@@ -509,6 +511,7 @@
 				D338D44E1D1140B600BB86C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D3ECECB61D1033BF0069BC94 /* Build configuration list for PBXProject "Focusin" */ = {
 			isa = XCConfigurationList;
