@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let menu = NSStatusBar.systemStatusBar().statusItemWithLength(NSVariableStatusItemLength)
     let popover = NSPopover()
     
-    let barIcon = "timer-2"
+    let barIcon = "goal-1"
     let timeFormat = "%d:%02d"
     
     func applicationDidFinishLaunching(notification: NSNotification) {
@@ -66,6 +66,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set the icon for the menu bar
         let button = menu.button
         let icon = NSImage(named: barIcon)
+        icon?.size.height = 18
+        icon?.size.width = 18
         icon?.template = true   // normal and dark mode
         button!.image = icon
         button!.imagePosition = NSCellImagePosition.ImageLeft
