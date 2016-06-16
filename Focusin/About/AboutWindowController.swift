@@ -24,4 +24,14 @@ class AboutWindowController: NSWindowController {
     @IBAction func openIcons8(sender: AnyObject) {
         NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://icons8.com")!)
     }
+    
+    @IBAction func openAlberto(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://albertoquesada.com")!)
+    }
+    
+    @IBAction func getCode(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://github.com/albertoqa/Focusin")!)
+    }
+    
+    
 }
