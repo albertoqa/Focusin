@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>task3</key>
+	<string>third task</string>
+	<key>task3state</key>
+	<true/>
+	<key>task2</key>
+	<string>second task</string>
+	<key>task2state</key>
+	<false/>
+	<key>task1</key>
+	<string>first task</string>
+	<key>task1state</key>
+	<false/>
+</dict>
+</plist>

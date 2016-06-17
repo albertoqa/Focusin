@@ -19,6 +19,9 @@
 		D338D4551D11422000BB86C1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D338D4541D11422000BB86C1 /* Cocoa.framework */; };
 		D338D45A1D11AD7B00BB86C1 /* TasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */; };
 		D338D45B1D11AD7B00BB86C1 /* TasksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */; };
+		D3E8E1991D13E6D10084B664 /* TaskKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E1981D13E6D10084B664 /* TaskKeys.swift */; };
+		D3E8E19A1D13EB570084B664 /* Tasks.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3E8E1961D13E5C80084B664 /* Tasks.plist */; };
+		D3E8E19C1D13F3550084B664 /* PlistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E8E19B1D13F3550084B664 /* PlistManager.swift */; };
 		D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */; };
 		D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC01D1033C00069BC94 /* Assets.xcassets */; };
 		D3ECECC41D1033C00069BC94 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3ECECC21D1033C00069BC94 /* MainMenu.xib */; };
@@ -62,6 +65,9 @@
 		D338D4541D11422000BB86C1 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TasksViewController.swift; path = Tasks/TasksViewController.swift; sourceTree = "<group>"; };
 		D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TasksViewController.xib; path = Tasks/TasksViewController.xib; sourceTree = "<group>"; };
+		D3E8E1961D13E5C80084B664 /* Tasks.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Tasks.plist; path = Tasks/Tasks.plist; sourceTree = "<group>"; };
+		D3E8E1981D13E6D10084B664 /* TaskKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskKeys.swift; sourceTree = "<group>"; };
+		D3E8E19B1D13F3550084B664 /* PlistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlistManager.swift; sourceTree = "<group>"; };
 		D3ECECBB1D1033BF0069BC94 /* Focusin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Focusin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3ECECBE1D1033BF0069BC94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3ECECC01D1033C00069BC94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -123,8 +129,11 @@
 		D338D4571D11AD5700BB86C1 /* Task */ = {
 			isa = PBXGroup;
 			children = (
+				D3E8E19B1D13F3550084B664 /* PlistManager.swift */,
 				D338D4581D11AD7B00BB86C1 /* TasksViewController.swift */,
 				D338D4591D11AD7B00BB86C1 /* TasksViewController.xib */,
+				D3E8E1961D13E5C80084B664 /* Tasks.plist */,
+				D3E8E1981D13E6D10084B664 /* TaskKeys.swift */,
 			);
 			name = Task;
 			sourceTree = "<group>";
@@ -290,6 +299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3E8E19A1D13EB570084B664 /* Tasks.plist in Resources */,
 				D3ECECD31D1034860069BC94 /* AboutWindowController.xib in Resources */,
 				D3ECECC11D1033C00069BC94 /* Assets.xcassets in Resources */,
 				D3ECECE11D1034F70069BC94 /* PomodoroViewController.xib in Resources */,
@@ -319,6 +329,7 @@
 				D3ECECBF1D1033BF0069BC94 /* AppDelegate.swift in Sources */,
 				D338D45A1D11AD7B00BB86C1 /* TasksViewController.swift in Sources */,
 				D338D4371D10842900BB86C1 /* CircleAnimation.swift in Sources */,
+				D3E8E1991D13E6D10084B664 /* TaskKeys.swift in Sources */,
 				D3ECECE31D1034F70069BC94 /* Timer.swift in Sources */,
 				D3ECECE21D1034F70069BC94 /* PopoverRootView.swift in Sources */,
 				D3ECECE01D1034F70069BC94 /* PomodoroViewController.swift in Sources */,
@@ -326,6 +337,7 @@
 				D338D4391D108FEE00BB86C1 /* Defaults.swift in Sources */,
 				D3ECECD21D1034860069BC94 /* AboutWindowController.swift in Sources */,
 				D3ECECDF1D1034F70069BC94 /* EventMonitor.swift in Sources */,
+				D3E8E19C1D13F3550084B664 /* PlistManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

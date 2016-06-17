@@ -30,11 +30,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let defaultTargetPomodoros = 8
         let defaultLongBreakAfterXPomodoros = 4
         
-        NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.pomodoroKey)
+        /*NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.pomodoroKey)
         NSUserDefaults.standardUserDefaults().setInteger(3, forKey: Defaults.shortBreakKey)
         NSUserDefaults.standardUserDefaults().setInteger(5, forKey: Defaults.longBreakKey)
         NSUserDefaults.standardUserDefaults().setInteger(2, forKey: Defaults.longBreakAfterXPomodoros)
-        NSUserDefaults.standardUserDefaults().setInteger(4, forKey: Defaults.targetKey)
+        NSUserDefaults.standardUserDefaults().setInteger(4, forKey: Defaults.targetKey)*/
 
         /* On first time launch set the default values */
         if(NSUserDefaults.standardUserDefaults().stringForKey(Defaults.pomodoroKey) == nil) {

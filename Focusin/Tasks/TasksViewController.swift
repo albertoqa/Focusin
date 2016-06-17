@@ -8,17 +8,30 @@
 
 import Cocoa
 
+/* Save only the three most important tasks of the day */
 class TasksViewController: NSViewController {
 
     @IBOutlet var mainView: PopoverRootView!
     
+    @IBOutlet weak var t1: NSTextField!
+    @IBOutlet weak var t1s: NSButton!
+    @IBOutlet weak var t2: NSTextField!
+    @IBOutlet weak var t2s: NSButton!
+    @IBOutlet weak var t3: NSTextField!
+    @IBOutlet weak var t3s: NSButton!
+    
     let pomodoroView: PomodoroViewController
     let popoverView: NSPopover
+    
+    var task1state: Bool = false
+    var task2state: Bool = false
+    var task3state: Bool = false
     
     init(nibName: String, bundle: NSBundle?, popover: NSPopover, pomodoroView: PomodoroViewController) {
         self.popoverView = popover
         self.pomodoroView = pomodoroView
         super.init(nibName: nibName, bundle: bundle)!
+        PlistManager.sharedInstance.startPlistManager()
     }
     
     required init?(coder: NSCoder) {
@@ -28,7 +41,62 @@ class TasksViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
+        writeDataInView()
+    }
+    
+    /* Write the data saved in the view */
+    func writeDataInView() {
+        t1.stringValue = PlistManager.sharedInstance.getValueForKey(TaskKeys.task1) as! String
+        t2.stringValue = PlistManager.sharedInstance.getValueForKey(TaskKeys.task2) as! String
+        t3.stringValue = PlistManager.sharedInstance.getValueForKey(TaskKeys.task3) as! String
+        
+        task1state = PlistManager.sharedInstance.getValueForKey(TaskKeys.task1state) as! Bool
+        task2state = PlistManager.sharedInstance.getValueForKey(TaskKeys.task2state) as! Bool
+        task3state = PlistManager.sharedInstance.getValueForKey(TaskKeys.task3state) as! Bool
+        
+        toggleButton(t1s, status: task1state)
+        toggleButton(t2s, status: task2state)
+        toggleButton(t3s, status: task3state)
+    }
+    
+    
+    @IBAction func task1Set(sender: AnyObject) {
+        PlistManager.sharedInstance.saveValue(t1.stringValue, forKey: TaskKeys.task1)
+    }
+    
+    @IBAction func task2Set(sender: AnyObject) {
+        PlistManager.sharedInstance.saveValue(t2.stringValue, forKey: TaskKeys.task2)
+    }
+    
+    @IBAction func task3Set(sender: AnyObject) {
+        PlistManager.sharedInstance.saveValue(t3.stringValue, forKey: TaskKeys.task3)
+    }
+    
+    @IBAction func task1SetStatus(sender: AnyObject) {
+        task1state = !task1state
+        toggleButton(t1s, status: task1state)
+        PlistManager.sharedInstance.saveValue(task1state, forKey: TaskKeys.task1state)
+    }
+    
+    @IBAction func task2SetStatus(sender: AnyObject) {
+        task2state = !task2state
+        toggleButton(t2s, status: task2state)
+        PlistManager.sharedInstance.saveValue(task2state, forKey: TaskKeys.task2state)
+    }
+    
+    @IBAction func task3SetStatus(sender: AnyObject) {
+        task3state = !task3state
+        toggleButton(t3s, status: task3state)
+        PlistManager.sharedInstance.saveValue(task3state, forKey: TaskKeys.task3state)
+    }
+    
+    /* Toggle the state of a button */
+    func toggleButton(button: NSButton, status: Bool) {
+        if(status) {
+            button.image = NSImage(named: "ok-1")
+        } else {
+            button.image = NSImage(named: "ok")
+        }
     }
     
 }
