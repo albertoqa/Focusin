@@ -18,7 +18,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     
     var delegate: PreferencesDelegate?
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
 
     @IBOutlet weak var pomodoroDuration: NSTextField!
     @IBOutlet weak var shortBreakDuration: NSTextField!
@@ -48,17 +48,17 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
         super.windowDidLoad()
         self.window?.center()
         self.window?.makeKeyAndOrderFront(nil)
-        NSApp.activateIgnoringOtherApps(true)
+        NSApp.activate(ignoringOtherApps: true)
         
         /* Load preferred settings */
-        pomodoroDuration.integerValue = defaults.integerForKey(Defaults.pomodoroKey)/seconds
-        shortBreakDuration.integerValue = defaults.integerForKey(Defaults.shortBreakKey)/seconds
-        longBreadDuration.integerValue = defaults.integerForKey(Defaults.longBreakKey)/seconds
-        targetPomodoros.integerValue = defaults.integerForKey(Defaults.targetKey)
-        longBreakAfterXPomodoros.integerValue = defaults.integerForKey(Defaults.longBreakAfterXPomodoros)
-        showNotifications.state = defaults.integerForKey(Defaults.showNotificationsKey)
-        showTimeInBar.integerValue = defaults.integerForKey(Defaults.showTimeKey)
-        startAtLogin.integerValue = defaults.integerForKey(Defaults.startAtLogin)
+        pomodoroDuration.integerValue = defaults.integer(forKey: Defaults.pomodoroKey)/seconds
+        shortBreakDuration.integerValue = defaults.integer(forKey: Defaults.shortBreakKey)/seconds
+        longBreadDuration.integerValue = defaults.integer(forKey: Defaults.longBreakKey)/seconds
+        targetPomodoros.integerValue = defaults.integer(forKey: Defaults.targetKey)
+        longBreakAfterXPomodoros.integerValue = defaults.integer(forKey: Defaults.longBreakAfterXPomodoros)
+        showNotifications.state = defaults.integer(forKey: Defaults.showNotificationsKey)
+        showTimeInBar.integerValue = defaults.integer(forKey: Defaults.showTimeKey)
+        startAtLogin.integerValue = defaults.integer(forKey: Defaults.startAtLogin)
     }
     
     override var windowNibName : String! {
@@ -66,7 +66,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     }
     
     /* Save the current settings and close the window */
-    @IBAction func savePreferences(sender: AnyObject) {
+    @IBAction func savePreferences(_ sender: AnyObject) {
         closedWithButton = true
         
         if(pomodoroDuration.integerValue < MIN_TIME || pomodoroDuration.integerValue > MAX_TIME) {
@@ -90,7 +90,7 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
             defaults.setValue(startAtLogin.state, forKey: Defaults.startAtLogin)
 
             let launcherAppIdentifier = "com.albertoquesada.LauncherApplication"
-            SMLoginItemSetEnabled(launcherAppIdentifier, startAtLogin.state == NSOnState)
+            SMLoginItemSetEnabled(launcherAppIdentifier as CFString, startAtLogin.state == NSOnState)
             
             closeAndSave()
             self.window?.close()
@@ -103,12 +103,12 @@ class PreferencesWindowController: NSWindowController, NSWindowDelegate {
     }
     
     /* Show an alert to the user */
-    func dialogError(text: String) -> Bool {
+    func dialogError(_ text: String) -> Bool {
         let myPopup: NSAlert = NSAlert()
         myPopup.messageText = errorTitle
         myPopup.informativeText = text
-        myPopup.alertStyle = NSAlertStyle.WarningAlertStyle
-        myPopup.addButtonWithTitle(buttonTitle)
+        myPopup.alertStyle = NSAlertStyle.warning
+        myPopup.addButton(withTitle: buttonTitle)
         let res = myPopup.runModal()
         if res == NSAlertFirstButtonReturn {
             return true

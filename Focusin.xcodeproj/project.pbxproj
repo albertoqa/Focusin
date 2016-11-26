@@ -258,6 +258,7 @@
 					D3ECECBA1D1033BF0069BC94 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = SS2K3Q6K3Q;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -493,6 +494,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertoquesada.Focusin;
 				PRODUCT_NAME = Focusin;
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -510,6 +512,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.albertoquesada.Focusin;
 				PRODUCT_NAME = Focusin;
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

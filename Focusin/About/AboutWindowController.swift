@@ -14,23 +14,23 @@ class AboutWindowController: NSWindowController {
         super.windowDidLoad()
         self.window?.center()
         self.window?.makeKeyAndOrderFront(nil)
-        NSApp.activateIgnoringOtherApps(true)
+        NSApp.activate(ignoringOtherApps: true)
     }
     
     override var windowNibName : String! {
         return "AboutWindowController"
     }
     
-    @IBAction func openIcons8(sender: AnyObject) {
-        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://icons8.com")!)
+    @IBAction func openIcons8(_ sender: AnyObject) {
+        NSWorkspace.shared().open(URL(string: "http://icons8.com")!)
     }
     
-    @IBAction func openAlberto(sender: AnyObject) {
-        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://albertoquesada.com")!)
+    @IBAction func openAlberto(_ sender: AnyObject) {
+        NSWorkspace.shared().open(URL(string: "http://albertoquesada.com")!)
     }
     
-    @IBAction func getCode(sender: AnyObject) {
-        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://github.com/albertoqa/Focusin")!)
+    @IBAction func getCode(_ sender: AnyObject) {
+        NSWorkspace.shared().open(URL(string: "https://github.com/albertoqa/Focusin")!)
     }
     
     

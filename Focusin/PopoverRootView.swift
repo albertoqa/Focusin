@@ -16,18 +16,18 @@ class PopoverRootView: NSView {
         if(self.window != nil) {
             let aFrameView = self.window?.contentView?.superview
             let a = PopoverBackgroundView(frame: aFrameView!.bounds)
-            a.autoresizingMask = [.ViewWidthSizable, .ViewHeightSizable]
-            aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.Below, relativeTo: aFrameView)
+            a.autoresizingMask = [.viewWidthSizable, .viewHeightSizable]
+            aFrameView?.addSubview(a, positioned: NSWindowOrderingMode.below, relativeTo: aFrameView)
         }
         super.viewDidMoveToWindow()
     }
     
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
     }
     
-    override func mouseDown(theEvent: NSEvent) {
-        super.mouseDown(theEvent)
+    override func mouseDown(with theEvent: NSEvent) {
+        super.mouseDown(with: theEvent)
     }
     
 }
@@ -43,7 +43,7 @@ class PopoverBackgroundView: NSView {
         super.init(coder: aDecoder)
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         NSColor.init(red: 1, green:1, blue:1, alpha:1).set()
         NSRectFill(self.bounds)
     }

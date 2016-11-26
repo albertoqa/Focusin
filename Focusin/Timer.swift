@@ -15,7 +15,7 @@ class Timer: NSObject {
     var shortBreakDuration: Int = 0      // total duration of a short break
     var longBreakDuration: Int = 0      // total duration of a long break
     
-    var timer: NSTimer = NSTimer()
+    var timer: Foundation.Timer = Foundation.Timer()
     
     var isPomodoro: Bool = true     // true if current timer is a pomodoro, false if it is a break
     var timeLeft: Int = 0           // time left for the current timer (it can be a pomodoro or a break)
@@ -45,7 +45,7 @@ class Timer: NSObject {
     
     /* Start the corresponding timer */
     func startTimer() {
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(timeInterval, target: self,
+        self.timer = Foundation.Timer.scheduledTimer(timeInterval: timeInterval, target: self,
                                                             selector: #selector(timerControl), userInfo: nil, repeats: true)
     }
     
@@ -72,7 +72,7 @@ class Timer: NSObject {
     
     /* Unpause the currently running timer or if timeLeft is 0, restart it */
     // TODO if pause exactly when the timeLeft is 0 and press play again, the pomodoro starts over... and it should not do that!
-    func unPause(isPomodoro: Bool, isLongBreak: Bool) -> Bool {
+    func unPause(_ isPomodoro: Bool, isLongBreak: Bool) -> Bool {
         if(timeLeft == 0) {
             if(isPomodoro) {
                 startPomodoroTimer()
@@ -94,8 +94,8 @@ class Timer: NSObject {
     }
     
     /* Stop the current timer and reset the pomodoro timer (no break timer) */
-    func resetTimer(isPomodoro: Bool, isLongBreak: Bool) {
-        if(self.timer.valid) {
+    func resetTimer(_ isPomodoro: Bool, isLongBreak: Bool) {
+        if(self.timer.isValid) {
             self.timer.invalidate()
         }
         if(isPomodoro) {
@@ -112,7 +112,7 @@ class Timer: NSObject {
     
     /* Stop the current timer */
     func stopTimer() {
-        if(self.timer.valid) {
+        if(self.timer.isValid) {
             self.timer.invalidate()
         }
     }

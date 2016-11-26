@@ -11,32 +11,32 @@ import Cocoa
 
 /* The delegate must implement the methods for control the action to perform for each notification */
 protocol NotificationsDelegate {
-    func handleNotificationAction(caller: Caller)
-    func handleNotificationOther(caller: Caller)
+    func handleNotificationAction(_ caller: Caller)
+    func handleNotificationOther(_ caller: Caller)
     func handleNotificationOpenApp()
 }
 
 /* Who is invoking the notification? The point of the application who create the notification. */
 enum Caller {
-    case TARGET, POMODORO, BREAK
+    case target, pomodoro, `break`
 }
 
 /* Create and handle interaction with user notifications */
-public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
+open class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     
     var delegate: NotificationsDelegate?
     
-    var caller: Caller = Caller.BREAK
+    var caller: Caller = Caller.break
     var actionButtonPressed: Bool = false   // allows to differenciate between the buttons of the notification
     
     override init() {
         super.init()
-        NSUserNotificationCenter.defaultUserNotificationCenter().delegate = self
+        NSUserNotificationCenter.default.delegate = self
     }
     
     /* Detect if the user interact with the notification - real action button */
-    public func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
-        if(notification.activationType == NSUserNotificationActivationType.ActionButtonClicked) {
+    open func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+        if(notification.activationType == NSUserNotification.ActivationType.actionButtonClicked) {
             self.handleNotifications(notification, isActionButton: true, openApp: false)
         } else {
             self.handleNotifications(notification, isActionButton: true, openApp: true)
@@ -44,25 +44,25 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     }
     
     /* Show always the notification, even if the app is open */
-    public func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
+    open func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
         return true
     }
     
     /* Detect dismissed notification -> in this app that is considered as press the other button */
-    public func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+    open func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
+        let priority = DispatchQueue.GlobalQueuePriority.default
+        DispatchQueue.global(priority: priority).async {
             var notificationStillPresent = true
             while (notificationStillPresent) {
-                NSThread.sleepForTimeInterval(1)
+                Thread.sleep(forTimeInterval: 1)
                 notificationStillPresent = false
-                for deliveredNotification in NSUserNotificationCenter.defaultUserNotificationCenter().deliveredNotifications {
+                for deliveredNotification in NSUserNotificationCenter.default.deliveredNotifications {
                     if deliveredNotification.identifier == notification.identifier {
                         notificationStillPresent = true
                     }
                 }
             }
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.handleNotifications(notification, isActionButton: false, openApp: false)
             }
         }
@@ -71,11 +71,11 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     /* Clear all notifications from the app */
     func removeAllNotifications() {
         actionButtonPressed = true  // this is set so the notification is not handled
-        NSUserNotificationCenter.defaultUserNotificationCenter().removeAllDeliveredNotifications()
+        NSUserNotificationCenter.default.removeAllDeliveredNotifications()
     }
     
     /* Show a new notification on the Notification Center */
-    func showNotification(title: String, text: String, actionTitle: String, otherTitle: String) -> Void {
+    func showNotification(_ title: String, text: String, actionTitle: String, otherTitle: String) -> Void {
         let notification = NSUserNotification()
         notification.title = title
         notification.informativeText = text
@@ -83,11 +83,11 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
         notification.actionButtonTitle = actionTitle
         notification.otherButtonTitle = otherTitle
         //notification.contentImage = NSImage(named: "goal")
-        NSUserNotificationCenter.defaultUserNotificationCenter().deliverNotification(notification)
+        NSUserNotificationCenter.default.deliver(notification)
     }
     
     /* Handle the notifications */
-    func handleNotifications(notification: NSUserNotification, isActionButton: Bool, openApp: Bool) {
+    func handleNotifications(_ notification: NSUserNotification, isActionButton: Bool, openApp: Bool) {
         if(isActionButton && !openApp) {
             actionButtonPressed = true
             handleNotificationAction(caller)
@@ -103,12 +103,12 @@ public class NotificationsHandler: NSObject, NSUserNotificationCenterDelegate {
     }
     
     /* Notification action: button action */
-    func handleNotificationAction(caller: Caller) {
+    func handleNotificationAction(_ caller: Caller) {
         delegate?.handleNotificationAction(caller)
     }
     
     /* Notification action: other action */
-    func handleNotificationOther(caller: Caller) {
+    func handleNotificationOther(_ caller: Caller) {
         delegate?.handleNotificationOther(caller)
     }
     

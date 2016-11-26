@@ -10,13 +10,13 @@ import Cocoa
 
 /* In this app there are two circles: one for the time and one for the target pomodoros to complete */
 enum Circles {
-    case TIME, TARGET
+    case time, target
 }
 
 /* Add two layers and animations to the pomodoro view */
-public class CircleAnimation {
+open class CircleAnimation {
     
-    let defaults = NSUserDefaults.standardUserDefaults()
+    let defaults = UserDefaults.standard
 
     // Time circle (big)
     let timeLeftShapeLayer = CAShapeLayer()
@@ -43,11 +43,11 @@ public class CircleAnimation {
     let strokeStartValue: Double = 0.0
     let strokeToValue: Double = 1.0
     
-    let orangeFull = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).CGColor
-    let orangeAplha = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).CGColor
-    let greenFull = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1).CGColor
-    let greenAlpha = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:0.5).CGColor
-    let gray = NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1).CGColor
+    let orangeFull = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:1).cgColor
+    let orangeAplha = NSColor.init(red: 0.929, green:0.416, blue:0.353, alpha:0.5).cgColor
+    let greenFull = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:1).cgColor
+    let greenAlpha = NSColor.init(red: 0.608, green:0.757, blue:0.737, alpha:0.5).cgColor
+    let gray = NSColor.init(red: 0.551, green:0.551, blue:0.551, alpha:1).cgColor
     
     // startButton is the position of the Time Circle, fullPomodoros is the position of the Target circle
     init(popoverRootView: PopoverRootView, startButton: NSButton, fullPomodoros: NSTextField, shortBreak: NSButton, longBreak: NSButton) {
@@ -61,10 +61,10 @@ public class CircleAnimation {
         
         strokeTimeIt.fromValue = strokeStartValue
         strokeTimeIt.toValue = strokeToValue
-        strokeTimeIt.duration = defaults.doubleForKey(Defaults.pomodoroKey)+1
-        strokeTargetIt.removedOnCompletion = true
-        pauseLayer(Circles.TIME)
-        timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        strokeTimeIt.duration = defaults.double(forKey: Defaults.pomodoroKey)+1
+        strokeTargetIt.isRemovedOnCompletion = true
+        pauseLayer(Circles.time)
+        timeLeftShapeLayer.add(strokeTimeIt, forKey: "timeLeft")
         
         // Animation circle for the target pomodoros
         drawBgShape(bgTargetShapeLayer, center: CGPoint(x: fullPomodoros.frame.midX, y: fullPomodoros.frame.midY),
@@ -74,9 +74,9 @@ public class CircleAnimation {
         
         strokeTargetIt.fromValue = strokeStartValue
         strokeTargetIt.toValue = strokeToValue
-        strokeTargetIt.duration = defaults.doubleForKey(Defaults.targetKey)*defaults.doubleForKey(Defaults.pomodoroKey)
-        strokeTargetIt.removedOnCompletion = false
-        pauseLayer(Circles.TARGET)
+        strokeTargetIt.duration = defaults.double(forKey: Defaults.targetKey)*defaults.double(forKey: Defaults.pomodoroKey)
+        strokeTargetIt.isRemovedOnCompletion = false
+        pauseLayer(Circles.target)
         //targetShapeLayer.addAnimation(strokeTargetIt, forKey: "target")
         
         // Static circle for short break
@@ -90,13 +90,13 @@ public class CircleAnimation {
     }
     
     /* Draw a complete static circle */
-    func drawCompleteCircleSpahe(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat, color: CGColor) {
+    func drawCompleteCircleSpahe(_ layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat, color: CGColor) {
         let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(center, radius:
+        bez.appendArc(withCenter: center, radius:
             radius, startAngle: -90.degreesToRadians, endAngle: 360.degreesToRadians, clockwise: true)
         layer.path = bez.CGPath(forceClose: false)
         layer.strokeColor = color
-        layer.fillColor = NSColor.clearColor().CGColor
+        layer.fillColor = NSColor.clear.cgColor
         layer.lineWidth = lineWidth
         mainView.wantsLayer = true
         layer.zPosition = 1
@@ -104,13 +104,13 @@ public class CircleAnimation {
     }
     
     /* Draw a cricle on the given layer */
-    func drawBgShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
+    func drawBgShape(_ layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(center, radius:
+        bez.appendArc(withCenter: center, radius:
             radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         layer.path = bez.CGPath(forceClose: false)
         layer.strokeColor = orangeAplha
-        layer.fillColor = NSColor.clearColor().CGColor
+        layer.fillColor = NSColor.clear.cgColor
         layer.lineWidth = lineWidth
         mainView.wantsLayer = true
         layer.zPosition = 1
@@ -118,53 +118,53 @@ public class CircleAnimation {
     }
     
     /* Draw a circle over the previous circle to make the apparence of fill it */
-    func drawShape(layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
+    func drawShape(_ layer: CAShapeLayer, center: CGPoint, radius: CGFloat, lineWidth: CGFloat) {
         let bez = NSBezierPath()
-        bez.appendBezierPathWithArcWithCenter(center, radius:
+        bez.appendArc(withCenter: center, radius:
             radius, startAngle: -90.degreesToRadians, endAngle: 270.degreesToRadians, clockwise: true)
         layer.path = bez.CGPath(forceClose: false)
         layer.strokeColor = orangeFull
-        layer.fillColor = NSColor.clearColor().CGColor
+        layer.fillColor = NSColor.clear.cgColor
         layer.lineWidth = lineWidth
         layer.zPosition = 1
         mainView.layer!.addSublayer(layer)
     }
     
     /* Pause the animation for the given circle */
-    func pauseLayer(circle: Circles) {
-        let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
-        let pausedTime : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil)
+    func pauseLayer(_ circle: Circles) {
+        let layer = circle == Circles.time ? timeLeftShapeLayer : targetShapeLayer
+        let pausedTime : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil)
         layer.speed = 0.0
         layer.timeOffset = pausedTime
     }
     
     /* Resume the animation for the given circle */
-    func resumeLayer(circle: Circles) {
-        let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
+    func resumeLayer(_ circle: Circles) {
+        let layer = circle == Circles.time ? timeLeftShapeLayer : targetShapeLayer
         let pausedTime = layer.timeOffset
         layer.speed = 1.0;
         layer.timeOffset = 0.0;
         layer.beginTime = 0.0;
-        let timeSincePause : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), fromLayer: nil) - pausedTime
+        let timeSincePause : CFTimeInterval = layer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
         layer.beginTime = timeSincePause
     }
     
     /* Reset the animation for the given circle */
-    func resetLayer(circle: Circles) {
-        let layer = circle == Circles.TIME ? timeLeftShapeLayer : targetShapeLayer
+    func resetLayer(_ circle: Circles) {
+        let layer = circle == Circles.time ? timeLeftShapeLayer : targetShapeLayer
         layer.speed = 0.0;
         layer.timeOffset = 0.0;
         layer.beginTime = 0.0;
     }
     
     /* Restart (reset and start) the animation for the given circle */
-    func restartLayer(circle: Circles) {
+    func restartLayer(_ circle: Circles) {
         resetLayer(circle)
         resumeLayer(circle)
     }
     
     /* Set the color of the circle and the animation */
-    func setTimeLayerColor(isPomodoro: Bool) {
+    func setTimeLayerColor(_ isPomodoro: Bool) {
         if(isPomodoro) {
             timeLeftShapeLayer.strokeColor = orangeFull
             bgTimeLeftShapeLayer.strokeColor = orangeAplha
@@ -185,19 +185,19 @@ public class CircleAnimation {
 
     
     /* Add a new animation for the time left. Remove previous animation before add the new one. */
-    func addTimeLeftAnimation(isPomodoro: Bool, isLongBreak: Bool) {
-        if(timeLeftShapeLayer.animationForKey("timeLeft") != nil) {
-            timeLeftShapeLayer.removeAnimationForKey("timeLeft")
+    func addTimeLeftAnimation(_ isPomodoro: Bool, isLongBreak: Bool) {
+        if(timeLeftShapeLayer.animation(forKey: "timeLeft") != nil) {
+            timeLeftShapeLayer.removeAnimation(forKey: "timeLeft")
         }
         
         if(isPomodoro) {
-            strokeTimeIt.duration = defaults.doubleForKey(Defaults.pomodoroKey)+1
+            strokeTimeIt.duration = defaults.double(forKey: Defaults.pomodoroKey)+1
         } else if(isLongBreak) {
-            strokeTimeIt.duration = defaults.doubleForKey(Defaults.longBreakKey)+1
+            strokeTimeIt.duration = defaults.double(forKey: Defaults.longBreakKey)+1
         } else {
-            strokeTimeIt.duration = defaults.doubleForKey(Defaults.shortBreakKey)+1
+            strokeTimeIt.duration = defaults.double(forKey: Defaults.shortBreakKey)+1
         }
-        timeLeftShapeLayer.addAnimation(strokeTimeIt, forKey: "timeLeft")
+        timeLeftShapeLayer.add(strokeTimeIt, forKey: "timeLeft")
     }
     
 }
@@ -209,40 +209,40 @@ extension Double {
 }
 
 extension NSBezierPath {
-    func CGPath(forceClose forceClose:Bool) -> CGPathRef? {
-        var cgPath:CGPathRef? = nil
+    func CGPath(forceClose:Bool) -> CGPath? {
+        var cgPath:CGPath? = nil
         
         let numElements = self.elementCount
         if numElements > 0 {
-            let newPath = CGPathCreateMutable()
-            let points = NSPointArray.alloc(3)
+            let newPath = CGMutablePath()
+            let points = NSPointArray.allocate(capacity: 3)
             var bDidClosePath:Bool = true
             
             for i in 0 ..< numElements {
                 
-                switch elementAtIndex(i, associatedPoints:points) {
+                switch element(at: i, associatedPoints:points) {
                     
-                case NSBezierPathElement.MoveToBezierPathElement:
+                case NSBezierPathElement.moveToBezierPathElement:
                     CGPathMoveToPoint(newPath, nil, points[0].x, points[0].y )
                     
-                case NSBezierPathElement.LineToBezierPathElement:
+                case NSBezierPathElement.lineToBezierPathElement:
                     CGPathAddLineToPoint(newPath, nil, points[0].x, points[0].y )
                     bDidClosePath = false
                     
-                case NSBezierPathElement.CurveToBezierPathElement:
+                case NSBezierPathElement.curveToBezierPathElement:
                     CGPathAddCurveToPoint(newPath, nil, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y )
                     bDidClosePath = false
                     
-                case NSBezierPathElement.ClosePathBezierPathElement:
-                    CGPathCloseSubpath(newPath)
+                case NSBezierPathElement.closePathBezierPathElement:
+                    newPath.closeSubpath()
                     bDidClosePath = true
                 }
                 
                 if forceClose && !bDidClosePath {
-                    CGPathCloseSubpath(newPath)
+                    newPath.closeSubpath()
                 }
             }
-            cgPath = CGPathCreateCopy(newPath)
+            cgPath = newPath.copy()
         }
         return cgPath
     }
