@@ -215,25 +215,25 @@ extension NSBezierPath {
         let numElements = self.elementCount
         if numElements > 0 {
             let newPath = CGMutablePath()
-            let points = NSPointArray.allocate(capacity: 3)
+            var points = [CGPoint](repeating: .zero, count: 3)
             var bDidClosePath:Bool = true
             
             for i in 0 ..< numElements {
-                
-                switch element(at: i, associatedPoints:points) {
+                let type = self.element(at: i, associatedPoints: &points)
+                switch type {
                     
-                case NSBezierPathElement.moveToBezierPathElement:
-                    CGPathMoveToPoint(newPath, nil, points[0].x, points[0].y )
+                case .moveToBezierPathElement:
+                    newPath.move(to: points[0])
                     
-                case NSBezierPathElement.lineToBezierPathElement:
-                    CGPathAddLineToPoint(newPath, nil, points[0].x, points[0].y )
+                case .lineToBezierPathElement:
+                    newPath.addLine(to: points[0])
                     bDidClosePath = false
                     
-                case NSBezierPathElement.curveToBezierPathElement:
-                    CGPathAddCurveToPoint(newPath, nil, points[0].x, points[0].y, points[1].x, points[1].y, points[2].x, points[2].y )
+                case .curveToBezierPathElement:
+                    newPath.addCurve(to: points[2], control1: points[0], control2: points[1])
                     bDidClosePath = false
                     
-                case NSBezierPathElement.closePathBezierPathElement:
+                case .closePathBezierPathElement:
                     newPath.closeSubpath()
                     bDidClosePath = true
                 }
