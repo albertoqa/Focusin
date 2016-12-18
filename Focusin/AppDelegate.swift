@@ -60,7 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         if startedAtLogin {
-            DistributedNotificationCenter.default().post(name: "killme", object: Bundle.main.bundleIdentifier!)
+            DistributedNotificationCenter.default().post(name: NSNotification.Name.init(rawValue: "killme"), object: Bundle.main.bundleIdentifier!)
         }
         
         // Set the icon for the menu bar

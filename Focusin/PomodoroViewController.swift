@@ -97,8 +97,6 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
         removeTaskButton.isHidden = true
         fullPomodoros.stringValue = zeroPomodoros + defaults.string(forKey: Defaults.targetKey)!
         
-        currentTask.placeholderAttributedString = NSAttributedString(string: currentTaskLabel, attributes: [NSForegroundColorAttributeName: gray, NSFontAttributeName : NSFont(name: font, size: currentTaskSize)!])
-        
         tasksView.contentViewController = TasksViewController(nibName: "TasksViewController", bundle: nil, popover: popoverView, pomodoroView: self)
         tasksView.behavior = NSPopoverBehavior.transient
     }
