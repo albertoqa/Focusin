@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var eventMonitor: EventMonitor? // monitor if the user click outside of the app
     
-    let menu = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
+    let menu = NSStatusBar.system().statusItem(withLength: 70)
     let popover = NSPopover()
     
     let barIcon = "goal-1"
