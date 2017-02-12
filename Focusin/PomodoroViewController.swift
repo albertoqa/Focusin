@@ -364,6 +364,7 @@ class PomodoroViewController: NSViewController, PreferencesDelegate, Notificatio
             self.showTimeInBar = defaults.integer(forKey: Defaults.showTimeKey) == NSOnState
             if(!self.showTimeInBar) {
                 buttonBar.title = ""
+                NSStatusBar.system().statusItem(withLength: 20) // TODO
             }
             self.showNotifications = defaults.integer(forKey: Defaults.showNotificationsKey) == NSOnState
             reloadPreferencesOnNextPomodoro = true
