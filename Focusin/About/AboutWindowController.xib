@@ -35,7 +35,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Focusin" id="ox5-gK-bUW">
                             <font key="font" metaFont="system" size="53"/>
-                            <color key="textColor" red="0.55294117649999996" green="0.55294117649999996" blue="0.55294117649999996" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="textColor" red="0.36080329019466939" green="0.36460121956513958" blue="0.36460121956513958" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -51,12 +51,12 @@
                         </connections>
                     </button>
                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QsB-Kq-2HF">
-                        <rect key="frame" x="120" y="237" width="94" height="94"/>
+                        <rect key="frame" x="120" y="249" width="94" height="94"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="256x256" id="mDn-xH-UlZ"/>
                     </imageView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzb-sE-fGY">
-                        <rect key="frame" x="57" y="184" width="220" height="35"/>
+                        <rect key="frame" x="52" y="189" width="230" height="35"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Developed by Alberto Quesada" id="Xs4-W7-SH6">
                             <font key="font" metaFont="system" size="16"/>
@@ -64,17 +64,6 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kMN-Er-vg6">
-                        <rect key="frame" x="71" y="160" width="196" height="48"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="square" title="www.albertoquesa.com" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="F3u-bC-9nP">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system" size="16"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="openAlberto:" target="-2" id="Uv2-NK-PAg"/>
-                        </connections>
-                    </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="saL-0E-NaQ">
                         <rect key="frame" x="95" y="113" width="148" height="48"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -84,6 +73,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="getCode:" target="-2" id="osa-uq-iB5"/>
+                        </connections>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kMN-Er-vg6">
+                        <rect key="frame" x="75" y="184" width="184" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="square" title="www.albertoquesa.com" bezelStyle="shadowlessSquare" image="Hacking" imagePosition="left" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="F3u-bC-9nP">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system" size="14"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="openAlberto:" target="-2" id="Uv2-NK-PAg"/>
                         </connections>
                     </button>
                 </subviews>
@@ -96,6 +96,7 @@
     </objects>
     <resources>
         <image name="256x256" width="256" height="256"/>
+        <image name="Hacking" width="24" height="24"/>
         <image name="github" width="96" height="96"/>
         <image name="icons8_logo" width="100" height="100"/>
     </resources>

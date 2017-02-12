@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var eventMonitor: EventMonitor? // monitor if the user click outside of the app
     
-    let menu = NSStatusBar.system().statusItem(withLength: 70)
+    let menu = NSStatusBar.system().statusItem(withLength: NSVariableStatusItemLength)
     let popover = NSPopover()
     
     let barIcon = "goal-1"
@@ -78,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let pomodoroDefaultDuration = UserDefaults.standard.integer(forKey: Defaults.pomodoroKey)
             button!.title = String(format: timeFormat, pomodoroDefaultDuration/60, pomodoroDefaultDuration%60)
         }
-
+        
         popover.contentViewController = PomodoroViewController(nibName: "PomodoroViewController", bundle: nil, button: button!, popover: popover)
         
         eventMonitor = EventMonitor(mask: .leftMouseDown) { [unowned self] event in
